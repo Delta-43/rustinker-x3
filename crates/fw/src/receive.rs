@@ -1,4 +1,4 @@
-//! The `receive` command and the Confirm button (Phase 4): join Wi-Fi, run
+//! The `receive` command and the Confirm button: join Wi-Fi, run
 //! one Receive session against the companion in `/X3/SERVER.CFG`, write new
 //! items to `/X3/DATA`, then switch Wi-Fi off. The session itself is
 //! `x3_core::receive`, the same code the simulator runs; this file is its

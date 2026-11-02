@@ -189,7 +189,7 @@ pub fn imu(i2c: &mut I2c<'_, Blocking>, out: &mut impl Write) {
     if id[0] != 0x05 {
         return;
     }
-    // Soft reset first: CrossPoint leaves the sensor in a mode (likely
+    // Soft reset first: other firmware can leave the sensor in a mode (likely
     // wake-on-motion via CTRL9) where data registers stop updating even
     // though plain control writes read back fine.
     const RESET: u8 = 0x60;

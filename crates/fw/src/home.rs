@@ -1,4 +1,4 @@
-//! The Home screen (Phase 6B): what the device shows when it is idle. A card
+//! The Home screen: what the device shows when it is idle. A card
 //! for the article you were reading, four tiles (Library, Tokens, Receive,
 //! Device), moved with the buttons. It owns the screen between the other
 //! modes: each one returns here when you press Back.
@@ -300,6 +300,7 @@ pub(crate) fn show(dev: &mut Device<'_>, out: &mut Out<'_>, frame: &Frame<'_>, f
     if !crate::ensure_epd(dev, out) {
         return;
     }
+    crate::capture::send(out, "bw", frame);
     let r = if full {
         dev.epd.change(frame)
     } else {
@@ -371,11 +372,11 @@ pub(crate) fn about(dev: &mut Device<'_>, out: &mut Out<'_>, bar: &Bar) {
     crate::menu::wait_key(dev, out);
 }
 
-/// Asks before leaving for CrossPoint: from there only a computer brings this
+/// Asks before starting the other firmware: from there only a computer brings this
 /// firmware back (ADR 017). Confirm says yes, Back says no.
-pub(crate) fn confirm_crosspoint(dev: &mut Device<'_>, out: &mut Out<'_>, bar: &Bar) -> bool {
+pub(crate) fn confirm_switch(dev: &mut Device<'_>, out: &mut Out<'_>, bar: &Bar) -> bool {
     draw(dev, out, true, |f, style| {
-        screens::confirm_crosspoint(f, style, &bar.status());
+        screens::confirm_switch(f, style, &bar.status());
     });
     loop {
         match crate::menu::next_key(dev, out) {

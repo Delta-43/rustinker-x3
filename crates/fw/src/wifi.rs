@@ -159,7 +159,7 @@ pub async fn online<R>(
             let Some(w) = wifi.iter().nth(i) else {
                 continue;
             };
-            // The name stays off the serial log: it is the owner's home network.
+            // The name stays off the serial log: it is a private network name.
             let signal = seen_refs
                 .iter()
                 .filter(|(name, _)| *name == w.ssid)

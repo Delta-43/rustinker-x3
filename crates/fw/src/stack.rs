@@ -1,4 +1,4 @@
-//! Stack high-water measurement (Phase 4 RAM budget). At boot the unused
+//! Stack high-water measurement (RAM budget). At boot the unused
 //! stack below the current frame is painted; later, the painted words still
 //! intact at the low end are stack that has never been touched.
 unsafe extern "C" {

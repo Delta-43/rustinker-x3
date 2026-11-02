@@ -39,13 +39,14 @@
   <a href="#project-structure">Project structure</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#contributing">Contributing</a> •
+  <a href="#credits">Credits</a> •
   <a href="#license">License</a>
 </p>
 
 > [!IMPORTANT]
-> Installing writes one app slot and keeps CrossPoint in the other, so you can always go
-> back. Take the full flash backup in [docs/BACKUP.md](docs/BACKUP.md) first. Some X3
-> units are locked against custom firmware; [docs/INSTALL.md](docs/INSTALL.md) says how to tell.
+> Installing writes one app slot and keeps your current firmware in the other, so you can
+> always go back. [docs/INSTALL.md](docs/INSTALL.md) starts with a full flash backup and says
+> how to tell whether your unit is locked against custom firmware.
 
 ---
 
@@ -62,9 +63,14 @@ what is waiting, checks every item's SHA-256, saves it to the microSD card and t
 Wi-Fi off again. Everything is then read offline.
 
 <p align="center">
-  <img src="samples/gui/gui-home.png" alt="Home screen" width="260">
-  <img src="samples/gui/gui-library.png" alt="Library" width="260">
-  <img src="samples/gui/gui-receive-done.png" alt="Receive complete" width="260">
+  <img src="assets/screens/home.png" alt="Home screen" width="200">
+  <img src="assets/screens/library.png" alt="Library" width="200">
+  <img src="assets/screens/reader.png" alt="A page in the reader" width="200">
+  <img src="assets/screens/pictures.png" alt="Pictures" width="200">
+</p>
+
+<p align="center">
+  <sub>Captured from the device over USB (<a href="docs/DEVELOPMENT.md#screen-capture">how</a>).</sub>
 </p>
 
 - **Reader** — articles and summaries in Literata, hyphenated for English and Polish, with read state and a remembered place; whole books open page by page from the card.
@@ -77,7 +83,7 @@ Wi-Fi off again. Everything is then read offline.
 
 - **The device pulls, the server pushes nothing** — the X3 runs no server; an HTTPS page cannot call a plain-HTTP device anyway, and pulling only on Receive keeps Wi-Fi off the rest of the time.
 - **Heavy work off the device** — the ESP32-C3 has about 380 KB of RAM and no PSRAM. Page extraction, image dithering and layout run on the companion; the X3 gets ready-to-draw payloads.
-- **Next to CrossPoint, not instead of it** — only `app1` and the boot selector are written. **Device → Back to CrossPoint** switches back without a computer.
+- **Next to your current firmware, not instead of it** — only `app1` and the boot selector are written. **Device → Switch firmware** goes back without a computer.
 - **Host-first** — `crates/core` is `no_std` logic shared by firmware, simulator and companion, so screens, codecs and the cache are tested on a PC (220 host tests) before they touch hardware.
 - **Measured, not guessed** — RAM, stack, refresh times and battery draw are logged on the device; numbers in the docs come from those logs.
 
@@ -94,16 +100,16 @@ Wi-Fi off again. Everything is then read offline.
 
 ## Project status
 
-**v0.1.0, in daily use on one X3** (CrossPoint 1.6.5, ESP32-C3 rev 4, UC8253 panel). Every
+**v0.1.1, in daily use on one X3** (ESP32-C3 rev 4, 16 MB flash, UC8253 panel). Every
 screen, Receive over LAN and internet, tokens, pictures and the power-cut recovery are
 verified on that unit. Not yet done: a 7-day battery run, a 24 h soak, UC8279 panels and
-any second unit. Details in [docs/TESTING.md](docs/TESTING.md) and
-[docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md).
+any second unit. Hardware facts, each marked verified or not, are in
+[docs/HARDWARE.md](docs/HARDWARE.md).
 
 ## Quick start
 
-Back up first ([docs/BACKUP.md](docs/BACKUP.md)), then either download
-`rustinker-x3-v0.1.0-app1.bin` from the [latest release](https://github.com/Delta-43/rustinker-x3/releases/latest)
+Back up first ([docs/INSTALL.md](docs/INSTALL.md#2-back-up-the-whole-flash)), then either download
+`rustinker-x3-vX.Y.Z-app1.bin` from the [latest release](https://github.com/Delta-43/rustinker-x3/releases/latest)
 or build it:
 
 ```bash
@@ -153,27 +159,23 @@ companion/       # x3-companion server and its web page
 tools/           # host CLIs, x3cmd.py serial helper, soak and drill scripts, notices.py
 infra/           # Docker Compose and Caddy examples, no secrets
 config/          # *.example.cfg files for the SD card
-assets/          # Literata font tables and the banner
+assets/          # Literata font tables, the banner, screenshots from the device
 samples/gui/     # simulator pictures of every screen
-docs/            # install, user guide, protocol, decisions, testing
+docs/            # install, user guide, companion, hardware, protocol, security
 ```
 
 ## Documentation
 
 | Doc | What's in it |
 | --- | --- |
-| [INSTALL.md](docs/INSTALL.md) | Build, flash `app1`, go back to CrossPoint, locked units |
-| [BACKUP.md](docs/BACKUP.md) | Full flash backup and the security check before any write |
-| [USER_GUIDE.md](docs/USER_GUIDE.md) | Buttons, Home, Library, Pictures, Receive, Device menu |
-| [COMPANION_SETUP.md](docs/COMPANION_SETUP.md) | Running x3-companion, registering the X3, the internet route |
-| [SHORTCUTS.md](docs/SHORTCUTS.md) | Optional iPhone Shortcuts (not tried on a phone) |
-| [PROTOCOL.md](docs/PROTOCOL.md) | Device API, payload formats, IDs and acks |
-| [HARDWARE.md](docs/HARDWARE.md) | Pin map, panel, buttons, SD, I²C; each fact marked verified or not |
-| [DECISIONS.md](docs/DECISIONS.md) | Architecture decision records |
-| [TESTING.md](docs/TESTING.md) | What is tested, on the host and on the device |
-| [SECURITY.md](docs/SECURITY.md) | Threat model and self-review |
-| [INFRASTRUCTURE.md](docs/INFRASTRUCTURE.md) | Server layout: tunnel, access control, proxy, companion |
-| [RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md) | What v0.1.0 covers and what is open |
+| [INSTALL.md](docs/INSTALL.md) | Check the chip, back up, flash `app1`, go back, locked units |
+| [USER_GUIDE.md](docs/USER_GUIDE.md) | Keys, Home, Library and reader, Pictures, Receive, Device menu, Wi-Fi setup |
+| [COMPANION_SETUP.md](docs/COMPANION_SETUP.md) | Running x3-companion, the web page, Receive away from home, backups |
+| [HARDWARE.md](docs/HARDWARE.md) | Pins, keys, display, SD, I²C devices, power, flash layout |
+| [PROTOCOL.md](docs/PROTOCOL.md) | Device API, companion API, card files, payload formats |
+| [SECURITY.md](docs/SECURITY.md) | Threat model, protections, known limits |
+| [DEVELOPMENT.md](docs/DEVELOPMENT.md) | Layout, build and test, simulator, tools, serial console, screen capture |
+| [DECISIONS.md](docs/DECISIONS.md) | The design decisions (ADRs) the code refers to |
 | [THIRD_PARTY.md](THIRD_PARTY.md) | Licences of every dependency, font and borrowed constant |
 
 ## Contributing
@@ -188,6 +190,13 @@ This project is unofficial and not associated with Xteink, Wizards of the Coast 
 Scryfall. It ships no card art and no Scryfall data; card images are fetched when you
 send one and shown in four greys on your own device, as a personal display under
 [Scryfall's terms](https://scryfall.com/docs/api).
+
+## Credits
+
+Built by [Delta-43](https://github.com/Delta-43) together with
+[Claude Code](https://claude.com/claude-code) (Anthropic), from the first hardware notes
+to this release. Panel constants and the grey method build on MarigoldOS, CrossPoint
+Reader and CrossPlant (MIT); see [THIRD_PARTY.md](THIRD_PARTY.md).
 
 ## License
 

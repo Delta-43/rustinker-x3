@@ -1,6 +1,4 @@
-/* Field Journal tokens (the author's design library, systems/field-journal), copied
-   from the generated tokens.css. Palette steps are dropped; only semantic tokens
-   remain. Literata (OFL) ships with the companion. General Sans (ITF FFL) may
+/* Design tokens for the companion page: semantic colours, type and spacing. Literata (OFL) ships with the companion. General Sans (ITF FFL) may
    not be redistributed, so it loads only from an optional private font folder
    (X3_FONT_DIR); otherwise the system sans is used. */
 @font-face { font-family: Literata; src: url("/fonts/literata-latin-wght-normal.woff2") format("woff2"); font-weight: 200 900; font-style: normal; unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; font-display: swap; }

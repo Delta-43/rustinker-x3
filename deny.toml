@@ -1,4 +1,4 @@
-# cargo-deny policy (Phase 8). Run: cargo deny check
+# cargo-deny policy. Run: cargo deny check
 # Licences: permissive only, plus MPL-2.0 (cssparser, selectors and friends, used
 # unmodified by the companion only) and CDLA-Permissive-2.0 (root certificate
 # data, companion only). The device firmware's dependencies are all permissive.

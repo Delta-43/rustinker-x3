@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reset-in-the-middle-of-Receive drill (Phase 6 exit test).
+"""Reset-in-the-middle-of-Receive drill.
 
 Usage: cutdrill.py CYCLES [--port P] [--wait S] [--min S] [--max S] [--seed N]
 

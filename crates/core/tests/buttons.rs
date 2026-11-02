@@ -1,7 +1,7 @@
 use x3_core::buttons::*;
 
 #[test]
-fn owner_unit_readings_decode() {
+fn test_unit_readings_decode() {
     // Left to right along the bottom: Left, Right, Back, Confirm (ADR 024).
     assert_eq!(bottom(3518), Some(Button::Left));
     assert_eq!(bottom(2685), Some(Button::Right));

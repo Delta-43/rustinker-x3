@@ -57,7 +57,7 @@ const DEEP_SLEEP_CHECK: u8 = 0xA5;
 
 /// CDI values as CrossPoint/freeink-sdk send them for the X3 (0x29 for the
 /// full and fast banks, 0xA9 for the half bank). Ours were 0x2F/0xAF, which
-/// left a grey speckle on every screen (owner, 2026-11-02).
+/// left a grey speckle on every screen (2026-11-02).
 const CDI_DIFFERENTIAL: u8 = 0x29;
 
 const CDI_ABSOLUTE: u8 = 0xA9;
@@ -273,7 +273,7 @@ impl<'d> Epd<'d> {
         self.load_bank(&FULL, CDI_DIFFERENTIAL)?;
         // The full bank is made for a white old plane (freeink-sdk), so DTM1
         // is white whatever the glass shows. (Keeping the real old plane, or
-        // one half-bank pass, did no better on the owner's unit, 2026-11-02.)
+        // one half-bank pass, did no better on the test unit, 2026-11-02.)
         self.plane(DTM1, &Pattern::White)?;
         self.command(DATA_STOP, &[])?;
         self.plane(DTM2, next)?;
@@ -333,7 +333,7 @@ impl<'d> Epd<'d> {
 
     /// `turn` with the clean pass, for menus and lists: their selection is
     /// a solid black block, and one fast pass leaves it light grey when it
-    /// moves away (owner video, 2026-11-02). Reader pages are thin text and
+    /// moves away (video, 2026-11-02). Reader pages are thin text and
     /// keep the single pass (about 0.4 s).
     pub fn turn_clean(&mut self, next: &dyn Rows) -> Result<Timing, Error> {
         self.turn_with(next, true)
@@ -398,7 +398,7 @@ impl<'d> Epd<'d> {
     }
 
     /// Clears retained ghosting: `cycles` full refreshes to black and back
-    /// to white (owner test, 2026-11-02: six cycles cleared a menu ghost
+    /// to white (test, 2026-11-02: six cycles cleared a menu ghost
     /// that single refreshes could not). About 3.5 s per cycle.
     pub fn clean(&mut self, cycles: u8) -> Result<(), Error> {
         for _ in 0..cycles {

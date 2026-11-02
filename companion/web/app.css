@@ -1,4 +1,4 @@
-/* X3 Companion. Field Journal tokens only (tokens.css). */
+/* X3 Companion. Uses the tokens in tokens.css only. */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }

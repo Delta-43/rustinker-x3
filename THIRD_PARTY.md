@@ -137,23 +137,22 @@ Companion web page (2026-10-24):
 - **Literata** (variable, latin and latin-ext, normal style) is embedded in the
   companion and served at `/fonts/`. SIL Open Font License 1.1, copyright 2017
   The Literata Project Authors. Licence text: `companion/web/fonts/Literata-OFL.txt`.
-  Files from fontsource via the owner's design library.
+  Files from fontsource.
 - **General Sans** (Indian Type Foundry, Fontshare) is **not** in this repository.
   The ITF Free Font License forbids redistribution through a repository or an
   application. The companion serves it only from an optional private folder
-  (`X3_FONT_DIR`) on the owner's own server; without it the system sans is used.
+  (`X3_FONT_DIR`) that the operator supplies; without it the system sans is used.
 - **Tabler Icons** (MIT): eight outline icons inlined as SVG in
   `companion/web/index.html` (link, file-text, cards, search, eye, refresh,
   device-tablet). https://github.com/tabler/tabler-icons
-- Colour, type and spacing values come from the owner's own Field Journal design
-  system (`companion/web/tokens.css`); no third-party design assets.
+- Colour, type and spacing values are this project's own (`companion/web/tokens.css`);
+  no third-party design assets.
 
 ## Locked Rust dependencies
 
 Licence expressions below were read from each downloaded crate manifest. This
-is an inventory, not a completed release audit. Cargo.lock records checksums.
-For distributed binaries, retain applicable upstream notices and licence texts;
-release assembly and cargo-deny review remain Phase 8 work.
+Cargo.lock records checksums; `cargo deny check` enforces the licence policy.
+A released firmware file carries the notices in `NOTICES.txt` (`tools/notices.py`).
 
 | Crate | Version | Manifest licence |
 | --- | --- | --- |
@@ -445,9 +444,8 @@ Exact new lockfile packages and declared licences from downloaded crates.io
 manifests follow. No upstream firmware application code was copied.
 `esp-wifi-sys-esp32c3` ships prebuilt Espressif radio libraries; its manifest
 and README declare MIT OR Apache-2.0, but the crate archive does not contain
-separate blob licence notices. Confirm the underlying ESP-IDF binary notices
-and include required notices before distributing a firmware binary (Phase 8).
-This host link proof is not a firmware release.
+separate blob licence notices. The upstream libraries are Apache-2.0 (see the
+prebuilt radio libraries note above); `NOTICES.txt` carries their licence.
 
 | Crate | Version | Declared licence |
 | --- | --- | --- |

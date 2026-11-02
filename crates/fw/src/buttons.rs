@@ -1,8 +1,8 @@
-//! Raw button readings for Phase 2.3 calibration. The bottom four buttons are
+//! Raw button readings for calibration. The bottom four buttons are
 //! a resistor ladder on GPIO1, the side two on GPIO2 (both ADC1, 11 dB);
 //! power is GPIO3, pulled up, low when pressed. Pins use esp-hal's basic
 //! offset calibration: without it the readings carried a ~1636-count offset
-//! that pushed Back and Confirm past full scale (owner unit, 2026-10-27).
+//! that pushed Back and Confirm past full scale (test unit, 2026-10-27).
 use core::cell::RefCell;
 use esp_hal::time::{Duration, Instant};
 use esp_hal::{

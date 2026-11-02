@@ -1,7 +1,7 @@
-//! X3 panel geometry and Phase 2.2 test patterns, as raw controller rows.
+//! X3 panel geometry and test patterns, as raw controller rows.
 //!
 //! A raw row is the 99 bytes sent to the UC8253 for one line, first byte
-//! first, MSB first; a set bit is white. On the owner unit (HARDWARE.md,
+//! first, MSB first; a set bit is white. On the test unit (HARDWARE.md,
 //! verified with `corners`), raw (x, y) is portrait pixel (column y, row x)
 //! with the buttons at the bottom: a transpose, no mirroring.
 

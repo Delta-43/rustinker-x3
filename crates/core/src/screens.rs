@@ -1,4 +1,4 @@
-//! What each device screen says, built from plain data (audit F1). The
+//! What each device screen says, built from plain data. The
 //! firmware reads the card, the clock and the gauge, fills these structs and
 //! calls the function; the simulator calls the same function with sample
 //! data. So captions, labels and wording live in one place, host-tested, and
@@ -304,7 +304,7 @@ pub struct DeviceInfo<'a> {
 }
 
 /// Rows on the Device menu, in order: Wi-Fi, Storage, Clean screen, About,
-/// Back to CrossPoint.
+/// Switch firmware.
 pub const DEVICE_ROWS: usize = 5;
 
 /// The Device menu.
@@ -357,8 +357,8 @@ pub fn device(
             ..Row::default()
         },
         Row {
-            title: "Back to CrossPoint",
-            caption: "To come back you need a computer",
+            title: "Switch firmware",
+            caption: "Starts the firmware in app0",
             ..Row::default()
         },
     ];
@@ -522,14 +522,14 @@ pub fn about(frame: &mut Frame<'_>, style: &Style<'_>, st: &Status<'_>, info: &A
     gui::pairs(frame, style, st, "About this device", &items, Keys::BACK);
 }
 
-/// The question before Back to CrossPoint (ADR 017).
-pub fn confirm_crosspoint(frame: &mut Frame<'_>, style: &Style<'_>, st: &Status<'_>) {
+/// The question before Switch firmware (ADR 017).
+pub fn confirm_switch(frame: &mut Frame<'_>, style: &Style<'_>, st: &Status<'_>) {
     gui::message(
         frame,
         style,
         st,
-        "Go back to CrossPoint?",
-        "CrossPoint starts at once.\n\nTo return to this firmware you need a computer and the install guide.\n\nConfirm switches. Back cancels.",
+        "Start the other firmware?",
+        "The firmware in app0 starts at once.\n\nTo return to RustInker you need a computer and the install guide.\n\nConfirm switches. Back cancels.",
         BACK_CONFIRM,
     );
 }

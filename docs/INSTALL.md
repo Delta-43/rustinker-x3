@@ -1,169 +1,190 @@
-# Install guide
+# Install
 
-How to put this firmware on an Xteink X3 next to CrossPoint, and how to go back.
+How to put RustInker-X3 on an Xteink X3, next to the firmware the device runs now (called
+the **previous firmware** below), and how to go back.
 
-**Tested on one unit only:** CrossPoint 1.6.5, ESP32-C3 revision 4, 16 MB flash,
-UC8253 panel. Your unit may differ. Every step below says what to check and when to
-stop. If a check fails, stop and ask. Do not try again blindly.
+> [!WARNING]
+> RustInker-X3 has been tested on one X3 only (ESP32-C3 revision 4, 16 MB flash, UC8253
+> panel). Every step below says what to check and when to stop. If a check fails, stop.
+> Do not retry blindly.
 
-## What this does and does not do
+## What the install changes
 
-- It writes **one app slot** (`app1`, at 0x780000) and the small **otadata**
-  partition that says which slot boots.
-- It does **not** touch the bootloader, the partition table, or the CrossPoint slot
-  (`app0`). CrossPoint stays where it is.
-- It overwrites whatever is in `app1` now. That is why you take a full backup first.
-- It does not unlock anything. Some units are locked against custom firmware and
-  cannot take this. See [Locked units](#locked-units).
-
-You can go back to CrossPoint at any time ([Go back](#go-back-to-crosspoint)).
+- It writes **one app slot**, `app1` at 0x780000, and the small **otadata** partition
+  that tells the bootloader which slot to start.
+- It does **not** touch the bootloader, the partition table or `app0`. The previous
+  firmware stays in `app0`, and you can switch back to it at any time.
+- Whatever is in `app1` now is overwritten. That is why you back up the whole flash first.
+- It does not unlock anything. Some units are locked against custom firmware
+  ([Locked units](#locked-units)).
 
 ## What you need
 
-- An X3 that runs CrossPoint and has a **data-capable** USB cable. The cable that
-  came with some units only charges. If no serial port appears when you plug in, try
-  another cable.
-- A computer with Python 3.10 or newer and `esptool` v5 (`pip install esptool`).
-- Rust (`rustup`; the repository pins the toolchain): to build the firmware, or with a
-  downloaded image only for the boot selector in step 4.
-- A microSD card formatted FAT32.
-- The device charged.
+- An X3 that accepts custom firmware.
+- A **data-capable** USB cable for the X3. Some cables only charge: if no serial port
+  appears when you plug in, try another one.
+- A computer with Python 3.10 or newer and [esptool](https://github.com/espressif/esptool)
+  v5: `pip install esptool`.
+- [Rust](https://rustup.rs) to make the boot selector files (step 5), and to build the
+  firmware yourself if you do not download it. The repository pins the toolchain.
+- A microSD card, FAT32.
+- The X3 charged.
 
-Close any serial monitor before you start. Keep the X3 awake on a CrossPoint
-screen while you connect: in deep sleep its USB port disappears.
+Close any serial monitor. Keep the X3 awake while you work: in deep sleep its USB port
+disappears. In the commands, `PORT` is the serial port: `/dev/ttyACM0` on Linux,
+`/dev/cu.usbmodem…` on macOS, `COM3` or similar on Windows.
 
-## 1. Back up the whole flash
+## 1. Check the chip
 
-Follow [BACKUP.md](BACKUP.md). It reads the flash and writes nothing. Do the full
-16 MiB read twice and compare the two SHA-256 hashes. Keep the file somewhere safe.
-**Never publish it:** it can hold your Wi-Fi details.
+```bash
+esptool --chip esp32c3 --port PORT flash-id
+esptool --chip esp32c3 --port PORT get-security-info
+```
 
-This backup is your way back. Without it, do not continue.
+| Check | Expected | Stop if |
+| --- | --- | --- |
+| `flash-id` | Detected flash size: 16MB | the size differs, or the command fails |
+| Secure Boot | Disabled | enabled |
+| Flash Encryption | Disabled | enabled |
+| Security flags | 0x0 | anything else you cannot explain |
 
-## 2. Check that your layout matches
+These commands only read. A failure here usually means a charge-only cable or a locked unit.
 
-The firmware is built for this layout:
+## 2. Back up the whole flash
+
+Read the full 16 MiB twice and compare. Each read takes about a minute and a half.
+
+```bash
+esptool --chip esp32c3 --port PORT read-flash 0x0 0x1000000 x3-backup-a.bin
+esptool --chip esp32c3 --port PORT read-flash 0x0 0x1000000 x3-backup-b.bin
+sha256sum x3-backup-a.bin x3-backup-b.bin
+```
+
+On Windows use `Get-FileHash x3-backup-a.bin, x3-backup-b.bin`; on macOS
+`shasum -a 256`. **The two hashes must match.** If they do not, read again; if they still
+differ, stop.
+
+Keep the backup safe and private: it holds your Wi-Fi details and the previous firmware's
+settings. **Never publish it.** Without a good backup, do not continue.
+
+## 3. Check the partition layout
+
+```bash
+cargo run -p x3-tools -- flash-info x3-backup-a.bin
+```
+
+It prints the partition table, the app in each slot and which slot boots. It prints
+nothing from NVS. RustInker-X3 is built for this layout:
 
 | Partition | Offset | Size |
 | --- | --- | --- |
-| otadata | 0xE000 | 8 KiB |
-| app0 (CrossPoint) | 0x10000 | 0x770000 |
-| app1 (this firmware) | 0x780000 | 0x770000 |
+| otadata | 0xE000 | 0x2000 |
+| app0 (previous firmware, booting) | 0x10000 | 0x770000 |
+| app1 (RustInker-X3) | 0x780000 | 0x770000 |
 
-Check your backup:
+**Stop** unless `app1` starts at 0x780000 with 0x770000 bytes and the previous firmware
+boots from `app0`. A different table needs a different build.
 
-```text
-cargo run -p x3-tools -- flash-info backup.bin
+## 4. Get the firmware image
+
+**Download:** from the [latest release](https://github.com/Delta-43/rustinker-x3/releases/latest)
+take `rustinker-x3-vX.Y.Z-app1.bin` and `SHA256SUMS`, and check them:
+
+```bash
+sha256sum -c SHA256SUMS --ignore-missing
 ```
 
-**Stop** unless `app1` starts at 0x780000 and is 0x770000 bytes. A different table
-needs a different image and a decision recorded in [DECISIONS.md](DECISIONS.md).
-The built image must fit: it is about 0.9 MB, far under 0x770000.
+`NOTICES.txt` on the release lists the licences of everything inside the image.
 
-## 3. Build the image
+**Or build it:**
 
-Or skip this step: download `rustinker-x3-vX.Y.Z-app1.bin` and `SHA256SUMS` from the
-project's GitHub releases, check the hash (`sha256sum -c SHA256SUMS`), and use the file
-as `fw-app1.bin`. `NOTICES.txt` on the release lists the licences of what is inside it.
-
-```text
+```bash
 cargo build -p fw --release --target riscv32imc-unknown-none-elf
-esptool --chip esp32c3 elf2image --flash-mode dio --flash-size 16MB -o fw-app1.bin target/riscv32imc-unknown-none-elf/release/fw
+esptool --chip esp32c3 elf2image --flash-mode dio --flash-size 16MB \
+  -o rustinker-x3-app1.bin target/riscv32imc-unknown-none-elf/release/fw
 ```
 
-## 4. Make the boot selector files
+The image is about 1.1 MB, far below the slot size.
 
-The otadata partition holds two entries. These commands build a copy that selects
-the slot you choose, from **your own** backup, so the rest of your flash state is
-kept. Slot 0 is `app0` (CrossPoint) and slot 1 is `app1` (this firmware).
+## 5. Make the boot selector files
 
-```text
-cargo run -p x3-tools -- otadata-select backup.bin 1 otadata-app1.bin
-cargo run -p x3-tools -- otadata-select backup.bin 0 otadata-crosspoint.bin
+The otadata partition says which slot boots. These commands make two copies from **your
+own backup**, so the rest of its state is kept:
+
+```bash
+cargo run -p x3-tools -- otadata-select x3-backup-a.bin 1 otadata-app1.bin
+cargo run -p x3-tools -- otadata-select x3-backup-a.bin 0 otadata-previous.bin
 ```
 
-Keep `otadata-crosspoint.bin`. It is the quickest way back.
+Keep `otadata-previous.bin`. It is the quickest way back.
 
-## 5. Prepare the SD card
+## 6. Prepare the SD card
 
-On the card, create a folder `X3` with a folder `DATA` inside it, and two small
-text files in `X3`. Samples are in [config/](../config).
+On the card make a folder `X3` with a folder `DATA` inside. Two optional files go in `X3`;
+samples are in [`config/`](../config):
 
-`X3/WIFI.CFG` is optional. You can add networks later from your phone (Device, then
-Left: [USER_GUIDE.md](USER_GUIDE.md)). To start with one, or to add up to four, repeat
-the pair of lines:
+- `X3/WIFI.CFG`: up to four networks. You can also add them later from your phone
+  ([User guide](USER_GUIDE.md#wi-fi-setup)).
 
-```text
-ssid=YourNetwork
-psk=YourPassword
-ssid=SecondNetwork
-psk=SecondPassword
+  ```text
+  ssid=YourNetwork
+  psk=YourPassword
+  ```
+
+- `X3/SERVER.CFG`: only needed for Receive, once you run the companion
+  ([Companion setup](COMPANION_SETUP.md)).
+
+  ```text
+  url=http://192.168.1.20:8788
+  token=<the 43-character device token>
+  ```
+
+The reader works without either file. Both hold secrets: keep the card private.
+
+## 7. Flash
+
+Put the card in the X3, connect it, wake it. Then, **one command at a time**:
+
+```bash
+esptool --chip esp32c3 --port PORT write-flash 0x780000 rustinker-x3-vX.Y.Z-app1.bin
+esptool --chip esp32c3 --port PORT write-flash 0xe000 otadata-app1.bin
 ```
 
-`X3/SERVER.CFG` is only needed for Receive, and only once you run the companion
-([COMPANION_SETUP.md](COMPANION_SETUP.md)):
+Each ends with `Hash of data verified.` The first writes the firmware; the second switches
+the boot slot. **If either reports an error, stop** and write down the exact message.
 
-```text
-url=http://192.168.1.20:8788
-token=<43 characters from: x3-companion device add NAME>
-```
+The X3 restarts and shows the Home screen: a "Continue reading" card and four tiles.
 
-To receive away from home as well, add the internet lines described in
-[COMPANION_SETUP.md](COMPANION_SETUP.md) ("Reaching the companion from any network").
+## Go back to the previous firmware
 
-The reader works without either file. Without them, Receive says what is missing.
-Keep the card's files private: they hold your Wi-Fi password and the device token.
+1. **On the device:** Home → Device → **Switch firmware**, then Confirm. The firmware
+   writes the boot selector, checks it and restarts into `app0`. To return to
+   RustInker-X3 later you need a computer: write `otadata-app1.bin` again (step 7).
+2. **From a computer:** `esptool --chip esp32c3 --port PORT write-flash 0xe000 otadata-previous.bin`.
+3. **Full restore:** `esptool --chip esp32c3 --port PORT write-flash 0x0 x3-backup-a.bin`.
+   This puts back the flash exactly as it was at the backup, and loses anything written
+   since. Use it as the last resort.
 
-## 6. Flash
+Do not update the previous firmware over the air while RustInker-X3 is installed: an
+over-the-air update normally writes the other slot, which is `app1`.
 
-Put the SD card in the X3, connect it, wake it, and find its port (`COMx` on
-Windows, `/dev/ttyACM0` on Linux). Then, **one command at a time**:
+## Update RustInker-X3
 
-```text
-esptool --port PORT write-flash 0x780000 fw-app1.bin
-esptool --port PORT write-flash 0xe000 otadata-app1.bin
-```
-
-The first writes the firmware. Each command ends with `Hash of data verified.` The
-second command switches the boot slot. **If either command reports an error, stop.**
-Some units are locked (below), and a failed flash must not be retried blindly. Write
-down the exact error text.
-
-The device restarts. After a few seconds you should see the Home screen: a
-"Continue reading" card and four tiles.
-
-## Go back to CrossPoint
-
-Any of these:
-
-1. **On the device:** Home, then Device. Press Confirm, read the question, and press
-   Confirm again to switch. Back cancels. The firmware writes the boot selector
-   itself, checks it, and restarts into CrossPoint. To come back to this firmware
-   you then need a computer: write `otadata-app1.bin` (step 6).
-2. **From a computer:** `esptool --port PORT write-flash 0xe000 otadata-crosspoint.bin`.
-3. **Full restore:** write your backup back (see [BACKUP.md](BACKUP.md)). This is the
-   last resort. It needs the same data-capable cable.
-
-Do not update CrossPoint while this firmware is installed in `app1`: CrossPoint's own
-updater could overwrite the wrong slot.
-
-## Update this firmware
-
-Repeat steps 3 and 6 (build, then write `app1` and `otadata-app1.bin`). Your SD card
-and your articles stay as they are.
+Write the new image to `app1` (step 7, first command only). The card, your articles and
+your pictures stay as they are.
 
 ## Locked units
 
-Some units reject custom firmware. Xteink has said units from some Chinese domestic
-retailers can be locked, and some units have an eFuse lock on USB download. A locked
-unit fails the write, or the port never appears. This project does not unlock
-anything and does not give advice on doing so. Community notes:
-[pocketink.io firmware FAQ](https://pocketink.io/firmware/faq).
+Some X3 units reject custom firmware. Xteink has said units sold through some Chinese
+domestic retailers can be locked, and some units have an eFuse lock on USB download. On
+a locked unit the write fails or the port never appears. This project does not unlock
+anything. Community notes: [pocketink.io firmware FAQ](https://pocketink.io/firmware/faq).
 
-## If it does not boot
+## Troubleshooting
 
-- No Home screen after a flash: write `otadata-crosspoint.bin` (step 2 of "Go back").
-- No serial port, or the write fails at once: wrong cable, or a locked unit.
-- Blank or garbled screen: the panel controller may not be a UC8253. This firmware
-  only drives that one. Go back to CrossPoint and open an issue with your
-  CrossPoint "About" screen.
+| You see | Try |
+| --- | --- |
+| No serial port when you plug in | another cable; wake the device first |
+| A write fails at once | stop: the unit may be locked |
+| No Home screen after flashing | write `otadata-previous.bin` to go back, then check step 3 |
+| Blank or garbled screen | the panel may not be a UC8253, which is the only one supported. Go back and open an issue with the controller name your previous firmware reports |

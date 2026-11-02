@@ -1,6 +1,6 @@
 //! Optional embedded-sdmmc adapter. Use a dedicated directory on the SD card.
 //! BlockDevice writes must finish before returning; real card power-loss
-//! behaviour still needs the owner-run tests. No media is opened by this module.
+//! behaviour still needs the author-run tests. No media is opened by this module.
 use crate::{
     Error,
     storage::{Catalog, FileKey, Store},

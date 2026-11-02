@@ -1,4 +1,4 @@
-//! The article library (Phase 3): a list of the articles in `/X3/DATA`,
+//! The article library: a list of the articles in `/X3/DATA`,
 //! newest first, and the reader on the chosen one. The reading position is
 //! saved to the card when the article is left.
 use crate::{Device, Text, home::Bar, page_loop, sd, serial::Out};
@@ -270,6 +270,7 @@ pub fn run(dev: &mut Device<'_>, out: &mut Out<'_>, style: &Style<'_>, bar: &Bar
             if !crate::ensure_epd(dev, out) {
                 return;
             }
+            crate::capture::send(out, "bw", &frame);
             let r = if full {
                 dev.epd.change(&frame)
             } else {

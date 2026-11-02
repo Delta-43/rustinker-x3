@@ -1,13 +1,13 @@
 //! X3 button decoding: two resistor ladders plus the power line, debounced.
 //!
-//! Owner unit, calibrated ADC (HARDWARE.md, 2026-10-27): GPIO1 reads 3518,
+//! Test unit, calibrated ADC (HARDWARE.md, 2026-10-27): GPIO1 reads 3518,
 //! 2685, 1486 and 4 for the four bottom buttons, left to right; GPIO2 reads
 //! 2236 (left side key) and 3 (right side key); idle 4095. Thresholds are the
 //! midpoints CrossPlant uses; above 3900 is no press.
 //!
-//! **Functions are the owner's, not CrossPoint's** (ADR 024, 2026-10-31): the
+//! **Functions are RustInker's own** (ADR 024): the
 //! bottom buttons are Left, Right, Back, Confirm from left to right.
-//! CrossPoint binds the same four ladder levels to Back, Confirm, Left, Right.
+//! Other X3 firmware may bind the same four ladder levels differently.
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Button {

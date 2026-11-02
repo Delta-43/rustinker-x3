@@ -1,175 +1,154 @@
 # User guide
 
-What you see and press once the firmware is installed ([INSTALL.md](INSTALL.md)).
+What you see and press once RustInker-X3 is installed ([Install](INSTALL.md)).
 
-## The buttons
+<p align="center">
+  <img src="../assets/screens/home.png" alt="Home" width="240">
+  <img src="../assets/screens/library.png" alt="Library" width="240">
+  <img src="../assets/screens/reader.png" alt="A page in the reader" width="240">
+</p>
 
-| Position | Button | Does |
+## Buttons
+
+Hold the X3 upright, buttons at the bottom.
+
+| Where | Button | Does |
 | --- | --- | --- |
-| Bottom, left bar, left end | **Left** `<` | Back one page or item |
-| Bottom, left bar, right end | **Right** `>` | Forward one page or item |
-| Bottom, right bar, left end | **Back** `←` | Leave this screen |
-| Bottom, right bar, right end | **Confirm** `○` | Open or choose |
-| Left side key | **Up** | Same as Left |
-| Right side key | **Down** | Same as Right |
-| Power | | Sleep and wake |
+| Bottom, left bar, left end | **Left** `<` | previous page or item |
+| Bottom, left bar, right end | **Right** `>` | next page or item |
+| Bottom, right bar, left end | **Back** `←` | leave this screen |
+| Bottom, right bar, right end | **Confirm** `○` | open or choose |
+| Left side key | **Up** | same as Left |
+| Right side key | **Down** | same as Right |
+| Top edge, right | **Power** | sleep and wake |
+| Top edge, left | **Reset** | restarts the device (a hardware reset, not a key) |
 
-These are not CrossPoint's functions: CrossPoint uses Back and Confirm on the left
-pair. The bar at the foot of each screen shows only the keys that do something
-there.
+The bar at the foot of each screen shows only the keys that do something there.
+Reset never deletes anything on the card.
 
 ## Home
 
 A **Continue reading** card with a progress bar, and four tiles: **Library**,
-**Pictures**, **Receive**, **Device**. Left and Right move the highlight. Confirm
-opens it. Back does a full refresh, which clears ghosting. The Receive tile shows when
-the last Receive finished. Power puts the X3 to sleep.
+**Pictures**, **Receive** and **Device**. Left and Right move the highlight; Confirm opens
+it. Back redraws the whole screen, which clears ghosting. Power puts the X3 to sleep.
 
-Screens change with two quick refreshes; every sixth change is a full refresh that
-flashes once, which keeps the screen clean.
+Screens change with a quick refresh; every sixth change is a full refresh that flashes
+once to keep the screen clean.
 
-## Device
+## Library and reader
 
-**Wi-Fi** chooses the network Receive tries first, or adds one. **Storage** shows what
-is on the card and can delete it all. **Clean screen** clears ghosting. **About this
-device** shows the firmware, battery and clock. **Back to CrossPoint** returns to the
-stock reader (you need a computer to come back).
+Your articles and summaries, newest first. A bold title marked **New** is unread. A bar
+and a percentage show how far you got. **Read** means you reached the end.
 
-The small key on the top edge, opposite Power, restarts the device. Use it if the
-screen stops responding. It does not delete anything on the card.
+In the reader, Right turns to the next page and Left to the previous one. Confirm redraws
+the page with a full refresh. Back leaves, and the device remembers your place. Leave from
+the last page and the article counts as read; opening it again starts from the top.
 
-## Library
-
-Your articles and summaries, newest first. A bold title with a **New** mark is
-unread. A bar and a percentage mean you have started it. **Read** means you
-reached the end.
-
-In the reader, Right turns to the next page and Left to the previous one. Confirm
-does a full refresh. Back leaves, and the device remembers your place. Leave from the
-last page and the article counts as read; opening it again starts from the top.
-
-Page turns take about 0.4 s. The device clears the whole screen every few pages to
-keep it crisp.
+A page turn takes about 0.4 s. Long articles and whole books open: the reader reads the
+text from the card a part at a time, so now and then a turn takes a moment longer.
 
 ## Pictures
 
+<p align="center">
+  <img src="../assets/screens/pictures.png" alt="Pictures" width="240">
+</p>
+
 The last 20 pictures you sent, shown in four greys: Magic: The Gathering tokens and your
 own images. Up and Down move through the list; Confirm shows one. On a picture, Left shows
-an older one and Right a newer one, Confirm makes it the sleep screen, and Back leaves. A picture marked "show" appears on its own
-when a Receive ends.
+an older one and Right a newer one, **Confirm makes it the sleep screen**, and Back leaves.
 
-To send your own image, open the companion's web page, choose **Picture** and pick a
-JPEG, PNG, WebP or GIF. The preview appears on its own; queue it when it looks right. Large
-photos are made smaller before they are sent. Line art and comics look best; photos are
-dithered to four greys.
-
-To send a token, choose **Token** and search for its name. Only tokens are listed, closest
-names first, each with its power and toughness, colour and set. A two-sided token shows both
-faces; pick the side to show.
-
-Every token and picture the X3 has received is kept on the companion, under **Saved tokens**
-and **Saved pictures** on the page (the newest 50). Choose one and press **Send again** to
-queue it at once. **Forget** removes it from the companion only.
+A picture sent with **Show** appears on its own when the Receive that brought it ends.
 
 ## Receive
 
-Choose the **Receive** tile. The device switches Wi-Fi on, asks your companion
-what is waiting, downloads it to the card, then switches Wi-Fi off. A result page
-lists what arrived and what was removed. Press any key to go back to Home.
+<p align="center">
+  <img src="../assets/screens/receive.png" alt="Receive" width="240">
+</p>
+
+Choose **Receive**. The X3 switches Wi-Fi on, asks your companion what is waiting,
+downloads it to the card and switches Wi-Fi off. A result page lists what arrived and what
+was removed; any key returns to Home. Nothing half-saved ever appears in the library.
 
 A Receive takes about 4 s when nothing is waiting, plus about 5 s for each picture and
-about 10 s for each long article. If it cannot finish it says why. You can press
-Receive again. Nothing half-saved ever shows up in the library.
+up to about 10 s for a long article.
 
-### What it keeps
-
-| Kind | Kept | When full |
+| Kind | Kept on the card | When full |
 | --- | --- | --- |
 | Pictures | the last 20 | the oldest goes; the one on screen stays |
-| Articles | 32 | an article you have finished goes first, otherwise the oldest received |
+| Articles | 32 | a finished article goes first, otherwise the oldest |
 
-Delete an article or token from the companion's web page and the device removes it at
-the next Receive.
+Removing an article or picture on the companion's page removes it from the X3 at the next
+Receive.
 
-**Long articles:** the reader opens articles up to the companion's limit of about 250 KiB of
-text. It reads them from the card a part at a time, so a page turn now and then takes a moment longer.
+**Away from home.** If `SERVER.CFG` has an `https://` address, Receive works on any saved
+network, such as a phone hotspot ([Companion setup](COMPANION_SETUP.md#receive-away-from-home)).
+At home it tries the LAN address first. If Receive says "The reply was not signed by your
+companion", do not trust that connection: the route is misconfigured or something is
+tampering with it.
 
-### Wi-Fi setup
+## Device
+
+| Entry | Does |
+| --- | --- |
+| **Wi-Fi** | choose the network Receive tries first, or add one |
+| **Storage** | what is on the card; **Delete everything** removes all articles and pictures |
+| **Clean screen** | flashes black and white for about 20 s to clear ghosting |
+| **About this device** | firmware version, battery and clock |
+| **Switch firmware** | restarts into the firmware in the other slot. Coming back needs a computer ([Install](INSTALL.md#go-back-to-the-previous-firmware)) |
+
+## Wi-Fi setup
 
 The X3 has no keyboard, so you add a network from your phone.
 
 1. Device → Wi-Fi → **Add a network**. The X3 starts a hotspot and shows a QR code, the
-   hotspot name (`X3-setup-…`) and a password. It changes every time.
+   hotspot name (`X3-setup-…`) and a one-time password.
 2. Scan the code with the phone camera and join. The phone may warn that there is no
-   internet. That is expected.
-3. In a browser open **192.168.4.1**. Pick your network from the list or type its name, enter
-   the password and tap Save.
+   internet; that is expected.
+3. In a browser open **192.168.4.1**. Pick your network or type its name, enter the
+   password and tap Save.
 4. The X3 closes the hotspot and tries the new network. The result is on its screen.
 
-The hotspot stops after 5 minutes, or when you press Back. The X3 keeps up to four
-networks. A fifth replaces the oldest, and saving a name again replaces its password.
-When more than one is saved, Receive joins the strongest one it can see, unless you chose
-one in Device → Wi-Fi: then it tries that one first (the X3 checks it straight away).
+The hotspot stops after 5 minutes or when you press Back. The X3 keeps up to four networks;
+a fifth replaces the oldest. When several are saved, Receive joins the strongest one it can
+see, or the one you chose in Device → Wi-Fi. Networks with a login page (hotels, cafés) and
+WPA-Enterprise do not work.
 
-It does not work with networks that need a login page (hotels, cafés) or with
-WPA-Enterprise.
-
-### Receive away from home
-
-If `SERVER.CFG` has an `https://` address, Receive works on any Wi-Fi you have saved (a
-phone hotspot, a café). At home it tries the LAN address first. Away from home it takes a
-few seconds longer, because it sets up an encrypted connection. If Receive says
-"The reply was not signed by your companion", the route is misconfigured or something is
-tampering with the connection: do not trust it, and check
-[COMPANION_SETUP.md](COMPANION_SETUP.md).
-
-## Power
+## Power and sleep
 
 - The screen's power goes off after 3 s without a key press and comes back on the next
-  press, on battery and on USB. (Leaving it on under a still picture for hours causes
-  ghosting.)
-- Press **Power** on Home to sleep now. On battery the device also sleeps after 10 minutes
-  without a key press. The screen shows "Sleeping" with the article you were reading, or
-  the picture you chose (open it in Pictures and press Confirm).
-  Press **Power** to wake.
-- On USB the device stands by instead of deep-sleeping (the chip cannot deep-sleep with a
-  USB host). It looks the same; Power wakes it.
-- If you see ghosting, choose **Device → Clean screen**: the screen flashes black and white
-  for about 20 s.
+  press. (Leaving it on under a still image for hours causes ghosting.)
+- **Power** on Home sleeps now. On battery the X3 also sleeps after 10 minutes without a
+  key press. The screen then shows "Sleeping" with the article you were reading, or the
+  picture you chose. **Power** wakes it.
+- On USB the X3 stands by instead of deep-sleeping, because the chip cannot deep-sleep with
+  a USB host attached. It looks the same, and Power wakes it.
 - Wi-Fi is on only during a Receive. Reading is always offline.
+- The clock shows Central European time (CET, CEST in summer).
 
-## The files on the card
+## Files on the card
 
-| File | What | Keep private? |
+| File | What | Private |
 | --- | --- | --- |
-| `X3/WIFI.CFG` | up to four saved networks, with passwords (Wi-Fi setup writes it) | yes |
+| `X3/WIFI.CFG` | up to four saved networks, with passwords | yes |
 | `X3/SERVER.CFG` | the companion's address and the device token | yes |
-| `X3/DATA/` | articles and pictures (`.DAT`, `.MET`) | |
-| `X3/LOG.TXT` | one line per Receive: time, counts, battery | |
-| `X3/SHOWN.CFG` | a pending "displayed" note for the companion | |
+| `X3/DATA/` | articles and pictures (`.DAT` and `.MET` files) | |
+| `X3/LOG.TXT` | one line per Receive: time, counts, timings, battery | |
+| `X3/SHOWN.CFG` | a pending "shown" note for the companion | |
 | `X3/WIFI.PIN` | the network Receive tries first (name only) | |
 | `X3/SLEEP.CFG` | the picture shown while asleep | |
 
-The device writes to `DATA` in a way that survives a power cut: a half-written file
-is ignored and cleaned up on the next Receive.
+Writes to `DATA` survive a power cut: a half-written item is ignored and cleaned up at the
+next Receive.
 
 ## When something goes wrong
 
 | You see | Likely cause | Try |
 | --- | --- | --- |
-| "Cannot reach the companion" | server off, wrong address, or Wi-Fi up but no route | check `SERVER.CFG`; open the companion's page from your phone |
-| "The companion refused the device token" | token wrong or removed | make a new one with `x3-companion device add NAME` and update `SERVER.CFG` |
-| "Receive timed out" | weak Wi-Fi or a slow server | move closer; press Receive again |
+| "Cannot reach the companion" | server off, wrong address, no route | check `SERVER.CFG`; open the companion's page from your phone |
+| "The companion refused the device token" | wrong or removed token | make a new one ([Companion setup](COMPANION_SETUP.md#3-register-the-x3)) and update `SERVER.CFG` |
+| "Receive timed out" | weak Wi-Fi or a slow server | move closer; Receive again |
 | "Cannot write to the card" | card full, locked or damaged | check the card on a computer |
-| "A download was damaged" | the network dropped bytes | press Receive again |
-| Wi-Fi never joins right after a restart | the router still holds the old connection | wait a minute and try again |
-| Library says "No articles" | nothing received yet | send one and choose Receive |
-
-If a Receive ends with `Wi-Fi: …` and a code, the code is the router's reason. The
-most common is a wrong password. Run Wi-Fi setup again and save the network once more.
-
-## Sending things
-
-You send articles and pictures from a phone or browser to the companion, not to the
-device. Setting that up is in [COMPANION_SETUP.md](COMPANION_SETUP.md); the web page
-and API are described in [PROTOCOL.md](PROTOCOL.md).
+| "A download was damaged" | the network dropped bytes | Receive again |
+| `Wi-Fi: …` with a code | the router refused the join; most often a wrong password | run Wi-Fi setup again |
+| Wi-Fi fails right after a restart | the router still holds the old connection | wait a minute |
+| The screen stops responding | | press Reset on the top edge |

@@ -1873,9 +1873,9 @@ async fn scryfall_rules_whole_cards_and_rate_gaps() {
     assert_eq!(gap("https://cards.scryfall.io/png/front/x.png"), 100);
 }
 
-/// The bodies docs/SHORTCUTS.md tells the iPhone Shortcuts to send. Shortcuts
-/// has no UUID action, so the guide builds one from the date and a random
-/// number: digits only, in UUID shape.
+/// Bodies an iPhone Shortcut can send. Shortcuts has no UUID action, so a
+/// submission ID can be built from the date and a random number: digits only,
+/// in UUID shape.
 #[tokio::test]
 async fn shortcut_bodies_from_the_guide_are_accepted() {
     let dir = Temp::new();

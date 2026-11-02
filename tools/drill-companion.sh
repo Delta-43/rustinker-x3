@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# A throwaway companion for the Phase 6 power-cut drill. Never touches the
+# A throwaway companion for power-cut drill. Never touches the
 # real one: its own container, its own empty volume, its own tokens.
 #
 #   drill-companion.sh up         start it, print the device token's file

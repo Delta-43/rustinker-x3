@@ -1,5 +1,5 @@
 //! microSD on the shared SPI bus (CS GPIO12, MISO GPIO7; clock and MOSI are
-//! the display's). Phase 2.4 bring-up: a read-only probe that initialises the
+//! the display's). Bring-up: a read-only probe that initialises the
 //! card, reports size and type, and lists the root directory.
 use core::fmt::Write;
 use embedded_hal::spi::{ErrorType, Operation, SpiBus, SpiDevice};
@@ -48,7 +48,7 @@ impl SpiDevice for Bus<'_, '_> {
     }
 }
 
-/// No RTC driver yet (Phase 2.5): a fixed date for any FAT timestamps.
+/// No RTC driver yet: a fixed date for any FAT timestamps.
 pub struct Clock;
 
 impl TimeSource for Clock {

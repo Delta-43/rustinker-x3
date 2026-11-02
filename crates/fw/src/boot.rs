@@ -1,5 +1,5 @@
-//! Boot slot switching (ADR 017): "Back to CrossPoint" writes one otadata
-//! entry so the bootloader starts CrossPoint's slot, then the caller restarts.
+//! Boot slot switching (ADR 017): "Switch firmware" writes one otadata
+//! entry so the bootloader starts the other slot, then the caller restarts.
 use embedded_storage::{ReadStorage, Storage};
 use esp_bootloader_esp_idf::partitions::{
     self, AppPartitionSubType, DataPartitionSubType, PartitionType,
@@ -7,8 +7,8 @@ use esp_bootloader_esp_idf::partitions::{
 use esp_storage::FlashStorage;
 use x3_core::otadata::{self, ENTRY_LEN, Entry, PARTITION_LEN, SECTOR_LEN};
 
-/// CrossPoint's slot on the owner unit (HARDWARE.md, verified 2026-10-26).
-pub const CROSSPOINT_SLOT: u32 = 0;
+/// The slot the previous firmware boots from (app0; INSTALL.md puts RustInker in app1).
+pub const OTHER_SLOT: u32 = 0;
 const IMAGE_MAGIC: u8 = 0xE9;
 const MAX_SLOTS: usize = 16;
 const OTA0_SUBTYPE: u8 = 0x10;

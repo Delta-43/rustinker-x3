@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Repeated-Receive soak (Phase 8): many Receives in a row, watching for failures,
+"""Repeated-Receive soak: many Receives in a row, watching for failures,
 memory loss and card damage.
 
 Usage: soak.py CYCLES [--interval S] [--port P] [--check-every N]

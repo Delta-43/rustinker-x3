@@ -61,7 +61,7 @@ impl Quality {
     };
 }
 /// Four even grey steps for 2-bit tokens: black, dark grey, light grey, white.
-/// Beat CrossPoint's darker panel model in the owner's panel test (ADR 018).
+/// Beat CrossPoint's darker panel model in the author's panel test (ADR 018).
 pub const EVEN_TONES: [f32; 4] = [0.0, 1.0 / 3.0, 2.0 / 3.0, 1.0];
 /// Token encoding: ADR 016 preparation (Lanczos3, levels, light sharpening, a
 /// lighter tone curve), then Atkinson diffusion to four greys (ADR 018).

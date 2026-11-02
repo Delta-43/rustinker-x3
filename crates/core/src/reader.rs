@@ -49,7 +49,7 @@ impl Frame<'_> {
         }
     }
 
-    /// One raw panel row (HARDWARE.md, Phase 2.2): raw row `r` is portrait
+    /// One raw panel row (HARDWARE.md): raw row `r` is portrait
     /// column `r`, and raw x runs down the portrait rows.
     pub fn raw_row(&self, r: usize, out: &mut [u8; panel::ROW_BYTES]) {
         out.fill(0xFF);

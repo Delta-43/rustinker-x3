@@ -1,6 +1,6 @@
 //! Read-only inspection of an ESP32-C3 flash dump (bootloader, partition table,
 //! otadata and app headers), plus building a replacement otadata file from a
-//! dump. Nothing here touches a device; flashing stays with the owner.
+//! dump. Nothing here touches a device; flashing stays with the author.
 use std::fmt::Write;
 
 pub const TABLE_OFFSET: usize = 0x8000;
@@ -167,7 +167,7 @@ fn state_name(s: u32) -> &'static str {
     }
 }
 
-/// A plain-text report for MEMORY.md. Read-only; no advice to write anything.
+/// A plain-text report. Read-only; no advice to write anything.
 pub fn report(dump: &[u8]) -> String {
     let mut r = String::new();
     let _ = writeln!(r, "Dump size: {} bytes ({:#x})", dump.len(), dump.len());
@@ -365,8 +365,8 @@ mod tests {
         let crc = otadata_crc(&seq.to_le_bytes());
         dump[at + 28..at + 32].copy_from_slice(&crc.to_le_bytes());
     }
-    /// The candidate CrossPoint layout from docs/HARDWARE.md, in erased flash.
-    fn crosspoint_like() -> Vec<u8> {
+    /// The candidate layout from docs/HARDWARE.md, in erased flash.
+    fn reader_like() -> Vec<u8> {
         let mut d = vec![0xFF; 0x100_0000];
         d[0] = IMAGE_MAGIC;
         d[12..14].copy_from_slice(&CHIP_ESP32C3.to_le_bytes());
@@ -381,8 +381,8 @@ mod tests {
         for (i, e) in table.iter().enumerate() {
             d[TABLE_OFFSET + i * 32..TABLE_OFFSET + i * 32 + 32].copy_from_slice(e);
         }
-        app(&mut d, 0x10000, "crosspoint", "1.6.4");
-        app(&mut d, 0x650000, "crosspoint", "1.6.5");
+        app(&mut d, 0x10000, "reader", "1.6.4");
+        app(&mut d, 0x650000, "reader", "1.6.5");
         d
     }
 
@@ -394,26 +394,26 @@ mod tests {
 
     #[test]
     fn reads_candidate_layout_and_active_slot() {
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         ota(&mut d, 0xE000, 1, 2);
         ota(&mut d, 0xF000, 2, 2);
         let (parts, _) = partitions(&d).unwrap();
         assert_eq!(parts.len(), 6);
         assert_eq!(parts[3].label, "app1");
         let r = report(&d);
-        assert!(r.contains("App app1: crosspoint 1.6.5"), "{r}");
+        assert!(r.contains("App app1: reader 1.6.5"), "{r}");
         assert!(r.contains("Boots: ota_1"), "{r}");
         assert!(!r.contains("WARNING"), "{r}");
     }
 
     #[test]
     fn bad_crc_and_invalid_slots_are_skipped() {
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         ota(&mut d, 0xE000, 1, 2);
         ota(&mut d, 0xF000, 2, 2);
         d[0xF000 + 28] ^= 1;
         assert!(report(&d).contains("Boots: ota_0"));
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         ota(&mut d, 0xE000, 1, 2);
         ota(&mut d, 0xF000, 2, 3);
         assert!(report(&d).contains("Boots: ota_0"));
@@ -421,7 +421,7 @@ mod tests {
 
     #[test]
     fn blank_otadata_and_empty_slot() {
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         d[0x650000..0x650100].fill(0xFF);
         let r = report(&d);
         assert!(r.contains("otadata[0]: blank"));
@@ -446,7 +446,7 @@ mod tests {
         let r = report(&d);
         assert!(r.contains("runs past the end"));
         assert!(r.contains("App huge: empty"));
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         d.truncate(0x10020);
         let r = report(&d);
         assert!(r.contains("not 16 MiB"));
@@ -455,7 +455,7 @@ mod tests {
 
     #[test]
     fn encrypted_looking_table_is_reported() {
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         d[TABLE_OFFSET..TABLE_OFFSET + 64].copy_from_slice(&[0x5A; 64]);
         assert!(report(&d).contains("unknown entry 5a 5a"));
     }
@@ -468,7 +468,7 @@ mod tests {
 
     #[test]
     fn otadata_select_switches_slot_and_keeps_active_entry() {
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         ota(&mut d, 0xE000, 7, 2);
         ota(&mut d, 0xF000, 6, 2);
         let new = otadata_select(&d, 1).unwrap();
@@ -489,7 +489,7 @@ mod tests {
 
     #[test]
     fn otadata_select_handles_blank_and_bad_entries() {
-        let mut d = crosspoint_like();
+        let mut d = reader_like();
         let new = otadata_select(&d, 1).unwrap();
         assert!(report(&with_otadata(&d, &new)).contains("Boots: ota_1 (seq 2"));
         ota(&mut d, 0xE000, 9, 2);
@@ -501,7 +501,7 @@ mod tests {
 
     #[test]
     fn otadata_select_rejects_bad_input() {
-        let d = crosspoint_like();
+        let d = reader_like();
         assert!(otadata_select(&d, 2).is_err());
         assert!(otadata_select(&d[..0xE100], 1).is_err());
         assert!(otadata_select(&[0u8; 16], 1).is_err());

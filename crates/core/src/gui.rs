@@ -1,4 +1,4 @@
-//! The on-device interface (PLAN Phase 6B): black and white, Literata, laid
+//! The on-device interface: black and white, Literata, laid
 //! out like an e-reader home screen: status bar, a "continue reading" card,
 //! icon tiles, rows with progress bars. Paper is white, ink is black; the
 //! selection is inverted.
@@ -19,9 +19,9 @@ const ROW_H_BAR: i32 = 88;
 const ROW_H_CAPTION: i32 = 104;
 const BAR_H: i32 = 20;
 /// Centres of the four bottom buttons, left to right: Left, Right, Back,
-/// Confirm. Measured on the owner's photo of the device (2026-10-31): two
+/// Confirm. Measured on a photo of the device (2026-10-31): two
 /// pill-shaped bars with a button at each end, so two pairs; each pair spread
-/// 10 px wider at the owner's request.
+/// 10 px wider, after trying it on the panel.
 const KEY_X: [i32; 4] = [88, 217, 308, 436];
 /// Vertical centre of the two side keys.
 const SIDE_Y: i32 = 199;
@@ -420,7 +420,7 @@ fn footer(frame: &mut Frame<'_>, keys: Keys) {
     }
     if keys.side {
         // Each side key is a raised bar about 160 px tall on screen scale,
-        // centred near y = 199 (measured on the owner's photo, 2026-10-31):
+        // centred near y = 199 (measured on a photo, 2026-10-31):
         // `<` on the left edge, `>` on the right.
         chevron(frame, 12, SIDE_Y, (-1, 0), true);
         chevron(frame, WIDTH as i32 - 13, SIDE_Y, (1, 0), true);

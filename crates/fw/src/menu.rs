@@ -1,6 +1,6 @@
 //! The Device menu and the screens under it: Wi-Fi (choose the network
 //! Receive tries first, or add one), Storage (what is on the card, delete
-//! everything), About, and Back to CrossPoint. Each screen draws in a plain
+//! everything), About, and Switch firmware. Each screen draws in a plain
 //! function, so no 52 KB frame is held across an await.
 extern crate alloc;
 
@@ -90,8 +90,8 @@ pub async fn device(dev: &mut Device<'_>, out: &mut Out<'_>, bar: &home::Bar) {
                     }
                     3 => home::about(dev, out, bar),
                     _ => {
-                        if home::confirm_crosspoint(dev, out, bar) {
-                            crate::crosspoint(dev, out);
+                        if home::confirm_switch(dev, out, bar) {
+                            crate::switch_firmware(dev, out);
                         }
                     }
                 }

@@ -1784,7 +1784,7 @@ dependencies = [
 
 [[package]]
 name = "fw"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "embassy-executor",
  "embassy-futures",
@@ -3703,7 +3703,7 @@ dependencies = [
 
 [[package]]
 name = "sim"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "embedded-graphics",
  "embedded-sdmmc",
@@ -4582,7 +4582,7 @@ checksum = "3ad82d2a33cdc9674dc7465672f271e096168fcdbe0f799d9e6db8c5892679dc"
 
 [[package]]
 name = "x3-companion"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "axum",
  "base64 0.23.1",
@@ -4613,7 +4613,7 @@ dependencies = [
 
 [[package]]
 name = "x3-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "embedded-sdmmc",
  "qrcodegen-no-heap",
@@ -4623,14 +4623,14 @@ dependencies = [
 
 [[package]]
 name = "x3-proto"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "sha2 0.10.9",
 ]
 
 [[package]]
 name = "x3-tools"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "fontdue",
  "image",

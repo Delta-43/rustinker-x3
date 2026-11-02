@@ -1,4 +1,4 @@
-//! Idle power (Phase 4B). Waiting for a button used to spin the CPU at
+//! Idle power. Waiting for a button used to spin the CPU at
 //! 30–60 mA. Now, while no USB host is connected, each wait is a light
 //! sleep woken by a timer, so the button ladders are still polled (Back,
 //! Confirm and Left never pull their line low enough for a GPIO wake).
@@ -16,7 +16,7 @@ use esp_hal::{
 
 /// One light sleep. A button seen down on a wake keeps the chip awake, so
 /// the rest of the press is read every 10 ms; a tap over ~50 ms counts
-/// (80 ms missed quick taps, owner 2026-11-01).
+/// (80 ms missed quick taps, 2026-11-01).
 const SLEEP_MS: u64 = 50;
 /// USB start-of-frame comes every 1 ms; none for this long means no host.
 const HOST_GRACE_US: u64 = 500_000;

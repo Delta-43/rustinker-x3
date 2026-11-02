@@ -37,8 +37,8 @@ fn parse_reads_erased_bad_and_good_entries() {
 }
 
 #[test]
-fn owner_unit_round_trip() {
-    // The owner's backup: CrossPoint in ota_0 at seq 7, older entry seq 6.
+fn test_unit_round_trip() {
+    // The test unit's backup: the previous firmware in ota_0 at seq 7, older entry seq 6.
     let backup = [entry(7, 2), entry(6, 2)];
     assert_eq!(booted_slot(&backup, 2), Some(0));
     let to_ours = select(&backup, 2, 1).unwrap();
@@ -46,13 +46,13 @@ fn owner_unit_round_trip() {
     let ours = apply(&backup, &to_ours);
     assert_eq!(ours[1].unwrap().seq, 8);
     assert_eq!(booted_slot(&ours, 2), Some(1));
-    // "Back to CrossPoint" from the firmware overwrites the older entry.
+    // "Switch firmware" overwrites the older entry.
     let back = select(&ours, 2, 0).unwrap();
     assert_eq!(back.sector, 0);
-    let crosspoint = apply(&ours, &back);
-    assert_eq!(crosspoint[0].unwrap().seq, 9);
-    assert_eq!(booted_slot(&crosspoint, 2), Some(0));
-    assert_eq!(ours[1], crosspoint[1]);
+    let previous = apply(&ours, &back);
+    assert_eq!(previous[0].unwrap().seq, 9);
+    assert_eq!(booted_slot(&previous, 2), Some(0));
+    assert_eq!(ours[1], previous[1]);
 }
 
 #[test]

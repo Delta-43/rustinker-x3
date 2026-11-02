@@ -68,7 +68,7 @@ pub fn article(text: &str, offset: usize) -> Result<(GrayImage, usize), Error> {
         let mut rendered = String::new();
         for c in line.text.chars().filter(|&c| c != '\u{ad}') {
             // The Latin-2 simulator font lacks typographic punctuation; the
-            // stored text keeps it. The device font must cover it (Phase 3).
+            // stored text keeps it. The device font must cover it.
             match c {
                 '\t' => rendered.push(' '),
                 '\u{2018}' | '\u{2019}' | '\u{201a}' | '\u{2032}' => rendered.push('\''),
@@ -128,7 +128,7 @@ pub fn token(bpp: u8) -> Result<GrayImage, Error> {
     Ok(image)
 }
 
-/// Device fonts and style for the Phase 3 reader (ADR 020).
+/// Device fonts and style for reader (ADR 020).
 pub static BODY_FONT: &[u8] = include_bytes!("../../../assets/fonts/literata-regular-24.x3f");
 pub static HEADING_FONT: &[u8] = include_bytes!("../../../assets/fonts/literata-bold-28.x3f");
 
@@ -166,7 +166,7 @@ pub fn reader_page(text: &str, offset: usize) -> Result<(GrayImage, usize), Erro
     Ok((img, next))
 }
 
-/// Every device GUI screen (Phase 6B) as a 528×792 image, with sample data.
+/// Every device GUI screen as a 528×792 image, with sample data.
 pub fn gui_screens() -> Result<Vec<(&'static str, GrayImage)>, Error> {
     use x3_core::gui::{self, Keys, Status, Step};
     use x3_core::reader::{FRAME_LEN, Frame, HEIGHT as H, WIDTH as W};
@@ -192,7 +192,7 @@ pub fn gui_screens() -> Result<Vec<(&'static str, GrayImage)>, Error> {
         out.push((name, img));
     };
     // Sample data; the wording and layout come from x3_core::screens, the
-    // same code the firmware draws with (audit F1).
+    // same code the firmware draws with.
     use x3_core::library::Progress;
     use x3_core::rtc::DateTime;
     use x3_core::screens::{
@@ -361,9 +361,7 @@ pub fn gui_screens() -> Result<Vec<(&'static str, GrayImage)>, Error> {
             "Home network",
         );
     });
-    shoot("gui-crosspoint", &|f| {
-        screens::confirm_crosspoint(f, &style, &st)
-    });
+    shoot("gui-switch", &|f| screens::confirm_switch(f, &style, &st));
     shoot("gui-no-card", &|f| screens::no_card(f, &style, &st));
     shoot("gui-sleep-set", &|f| {
         screens::sleep_picture_set(f, &style, &st, true)
@@ -421,7 +419,7 @@ mod tests {
     }
     #[test]
     fn reader_golden() {
-        // Approved on the panel by the owner, 2026-10-27 (24/28 px, ADR 020).
+        // Chosen on the panel, 2026-10-27 (24/28 px, ADR 020).
         let (frame, next) = reader_page(READER_SAMPLE, 0).unwrap();
         assert_eq!(next, READER_SAMPLE.len(), "the sample fits one page");
         golden("reader-1.png", frame);

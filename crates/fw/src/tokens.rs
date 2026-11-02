@@ -1,4 +1,4 @@
-//! Token mode (Phase 5). 2 bpp tokens are drawn in four greys (ADR 018,
+//! Token mode. 2 bpp tokens are drawn in four greys (ADR 018,
 //! CrossPoint's method): a black-and-white base, a settle pass, then the
 //! two grey planes and a weak nudge. Each plane is a separate pass over the
 //! card into the one frame buffer (`x3_core::token`). 1 bpp tokens stay
@@ -117,6 +117,7 @@ fn draw_record(
     }
     if bpp == 1 {
         // At 1 bpp the base pass already is the picture.
+        crate::capture::send(out, "bw", &frame);
         dev.epd.full(&frame).map_err(|_| "panel error")?;
         let _ = writeln!(
             out,
@@ -126,15 +127,18 @@ fn draw_record(
         );
         return Ok(());
     }
+    crate::capture::send(out, "base", &frame);
     dev.epd
         .grey_base(&frame)
         .map_err(|_| "panel error (base)")?;
     let base_ms = t0.elapsed().as_millis();
     decode_into(dev, &mut frame, r, LOW)?;
+    crate::capture::send(out, "low", &Inverted(&frame));
     dev.epd
         .grey_plane(false, &Inverted(&frame))
         .map_err(|_| "panel error (low plane)")?;
     decode_into(dev, &mut frame, r, HIGH)?;
+    crate::capture::send(out, "high", &Inverted(&frame));
     dev.epd
         .grey_plane(true, &Inverted(&frame))
         .map_err(|_| "panel error (high plane)")?;
@@ -275,6 +279,7 @@ pub fn screen(
         if !crate::ensure_epd(dev, out) {
             return;
         }
+        crate::capture::send(out, "bw", &frame);
         let r = if full {
             dev.epd.change(&frame)
         } else {

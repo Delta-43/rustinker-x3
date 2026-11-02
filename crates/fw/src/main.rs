@@ -1,4 +1,4 @@
-//! Phase 2 bring-up firmware: boots from app1, prints chip info on USB serial
+//! RustInker-X3 firmware: boots from app1, prints chip info on USB serial
 //! and takes line commands there (`help` lists them).
 #![no_std]
 #![cfg_attr(target_os = "none", no_main)]
@@ -16,6 +16,8 @@ mod link_proof;
 mod boot;
 #[cfg(target_os = "none")]
 mod buttons;
+#[cfg(target_os = "none")]
+mod capture;
 #[cfg(target_os = "none")]
 mod epd;
 #[cfg(target_os = "none")]
@@ -52,7 +54,7 @@ esp_bootloader_esp_idf::esp_app_desc!();
 #[cfg(target_os = "none")]
 const LINE_MAX: usize = 64;
 #[cfg(target_os = "none")]
-const HELP: &str = "commands: status, crosspoint, display white|black|checker|corners, \
+const HELP: &str = "commands: status, switch, capture on|off, display white|black|checker|corners, \
                     partial, panel sleep, buttons, keys, sd probe [high|low|float], sd test MIB, i2c scan, time, time set YYYY-MM-DD HH:MM:SS, battery, imu, sleep, read, library, check, wifi, receive (or the Receive tile on Home), log, tokens, check, drill TOKEN|off";
 
 /// What the bring-up commands act on.
@@ -64,7 +66,7 @@ struct Device<'d> {
     buttons: buttons::Handle,
     sd_cs: esp_hal::gpio::Output<'d>,
     i2c: Option<esp_hal::i2c::master::I2c<'d, esp_hal::Blocking>>,
-    /// RTC, light sleep and idle bookkeeping (Phase 4B).
+    /// RTC, light sleep and idle bookkeeping.
     power: power::Power<'d>,
     /// The radio. Each Wi-Fi session borrows it and switches it off after.
     wifi: esp_hal::peripherals::WIFI<'static>,
@@ -172,7 +174,7 @@ async fn main(_spawner: embassy_executor::Spawner) -> ! {
     };
 
     if let Some(i2c) = dev.i2c.as_mut() {
-        // Unused for now; CrossPoint may leave it running.
+        // Unused for now; the previous firmware may leave it running.
         rtc::imu_off(i2c);
     }
     let rev = esp_hal::efuse::chip_revision();
@@ -267,7 +269,7 @@ impl Device<'_> {
         let host = self.power.host();
         // Charge pump off after a short idle on USB too: a static image held
         // under drive for hours left a retained ghost and speckle that only
-        // black/white cycles cleared (owner photos, 2026-11-02).
+        // black/white cycles cleared (photos, 2026-11-02).
         if self.power.idle_us() > power::PANEL_OFF_US && self.epd.powered() {
             let _ = self.epd.power_off();
         }
@@ -291,7 +293,7 @@ impl Device<'_> {
             let idle = self.power.idle_us();
             // (Charge pump off is above, for USB and battery alike. Controller
             // deep sleep while running turned a resting image grey after
-            // ~30 s, owner 2026-10-27, so only the pump goes off.)
+            // ~30 s, 2026-10-27, so only the pump goes off.)
             if let (Some(s), Some(i2c)) = (self.power.stretch.as_mut(), self.i2c.as_mut())
                 && now >= s.next_sample_us
             {
@@ -418,7 +420,15 @@ fn run(command: &[u8], dev: &mut Device<'_>, out: &mut serial::Out<'_>) {
             let _ = writeln!(out, "{HELP}");
         }
         b"status" => status(dev, out),
-        b"crosspoint" => crosspoint(dev, out),
+        b"switch" => switch_firmware(dev, out),
+        b"capture on" => {
+            capture::set(true);
+            let _ = writeln!(out, "capture: on");
+        }
+        b"capture off" => {
+            capture::set(false);
+            let _ = writeln!(out, "capture: off");
+        }
         b"partial" => {
             if ensure_epd(dev, out) {
                 partial(dev, out);
@@ -659,7 +669,7 @@ fn deep_sleep_with(dev: &mut Device<'_>, out: &mut serial::Out<'_>, screen: bool
         let r = dev.epd.sleep();
         let _ = writeln!(out, "sleep: panel {r:?}");
     }
-    // On USB the ESP32-C3 hangs entering deep sleep (owner, 2026-11-02: no
+    // On USB the ESP32-C3 hangs entering deep sleep (2026-11-02: no
     // wake until unplugged; deep sleep on battery works). Stand by instead:
     // poll Power every 100 ms and restart on a press, as a wake would. If
     // USB goes away meanwhile, fall through to deep sleep.
@@ -685,7 +695,7 @@ fn deep_sleep_with(dev: &mut Device<'_>, out: &mut serial::Out<'_>, screen: bool
     let mut pins: [(&mut dyn esp_hal::gpio::RtcPinWithResistors, WakeupLevel); 1] =
         [(&mut power, WakeupLevel::Low)];
     let button = RtcioWakeupSource::new(&mut pins);
-    // The button alone did not wake the chip (owner, 2026-11-02); with a
+    // The button alone did not wake the chip (2026-11-02); with a
     // timer beside it, as in the 2026-10-27 test, it does. The timer is
     // long, and a timer wake goes straight back to sleep (see `main`).
     let timer = TimerWakeupSource::new(core::time::Duration::from_secs(6 * 3600));
@@ -757,6 +767,7 @@ fn sleep_text(dev: &mut Device<'_>, out: &mut serial::Out<'_>) {
         &body,
         x3_core::gui::Keys::NONE,
     );
+    capture::send(out, "bw", &frame);
     let r = dev.epd.full(&frame);
     let _ = writeln!(out, "sleep: screen {r:?}");
 }
@@ -784,7 +795,7 @@ fn reader_style() -> Option<x3_core::reader::Style<'static>> {
     })
 }
 
-/// Reads the built-in sample (Phase 3 bring-up).
+/// Reads the built-in sample.
 #[cfg(target_os = "none")]
 fn read(dev: &mut Device<'_>, out: &mut serial::Out<'_>) {
     use core::fmt::Write;
@@ -951,6 +962,7 @@ fn page_loop(
         if !ensure_epd(dev, out) {
             return None;
         }
+        capture::send(out, "bw", &frame);
         let r = if full {
             dev.epd.full(&frame)
         } else {
@@ -1069,7 +1081,7 @@ fn status(dev: &mut Device<'_>, out: &mut serial::Out<'_>) {
 }
 
 #[cfg(target_os = "none")]
-fn crosspoint(dev: &mut Device<'_>, out: &mut serial::Out<'_>) {
+fn switch_firmware(dev: &mut Device<'_>, out: &mut serial::Out<'_>) {
     use core::fmt::Write;
     let layout = match &dev.layout {
         Ok(l) => l,
@@ -1080,11 +1092,11 @@ fn crosspoint(dev: &mut Device<'_>, out: &mut serial::Out<'_>) {
     };
     let _ = writeln!(
         out,
-        "back to CrossPoint: switching to ota_{}",
-        boot::CROSSPOINT_SLOT
+        "switch firmware: switching to ota_{}",
+        boot::OTHER_SLOT
     );
     out.flush();
-    match layout.switch_to(&mut dev.flash, boot::CROSSPOINT_SLOT) {
+    match layout.switch_to(&mut dev.flash, boot::OTHER_SLOT) {
         Ok(()) => {
             let _ = writeln!(out, "otadata written and verified; restarting");
             out.flush();

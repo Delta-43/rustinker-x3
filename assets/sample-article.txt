@@ -1,0 +1,25 @@
+# Czytanie bez telefonu
+
+Zażółć gęślą jaźń. Pchnąć w tę łódź jeża lub ośm skrzyń fig. „Cytat w cudzysłowie” – oraz myślnik… i wielokropek.
+
+To jest przy­kła­do­wy ar­ty­kuł za­pi­sa­ny na kar­cie pa­mię­ci. Stro­ny za­cho­wu­ją pol­skie li­te­ry i moż­na je czy­tać bez po­łą­cze­nia z sie­cią, na­wet gdy te­le­fon le­ży w dru­gim po­ko­ju.
+
+Czyt­nik nie po­trze­bu­je in­ter­ne­tu, aby po­ka­zać ten tekst. Ar­ty­ku­ły przy­cho­dzą z ser­we­ra do­mo­we­go, gdy na­ci­śniesz „Od­bierz”, a po­tem zo­sta­ją na kar­cie. Mo­żesz za­mknąć urzą­dze­nie w po­ło­wie zda­nia i wró­cić do tego sa­me­go miej­sca ju­tro.
+
+Ekran e-papieru zu­ży­wa prąd tyl­ko wte­dy, gdy zmie­nia ob­raz. Mię­dzy stro­na­mi bate­ria pra­wie się nie roz­ła­do­wu­je, więc je­den wie­czór czy­ta­nia to za­le­d­wie kil­ka pro­cent.
+
+# A quiet afternoon
+
+The e-ink screen keeps its im­age while the de­vice sleeps. Jus­ti­fied text fills each line to the right mar­gin, and the last line of a para­graph stays ragged. This sam­ple con­tains orig­i­nal text and no card art.
+
+Pages turn with the bars at the bottom or the keys on the side. A fast re­fresh changes only the pix­els that need it, so a page turn takes well un­der half a sec­ond. Every few pages a full re­fresh clears the faint ghost­ing that fast up­dates leave be­hind.
+
+The read­ing po­si­tion is a byte off­set into the ar­ti­cle, not a page num­ber. If the font size changes, the lay­out is re­built from the same place, and you land on the page that holds the sen­tence you were read­ing.
+
+Hy­phen­ation hap­pens on the com­pan­ion server be­fore an ar­ti­cle is sent. The de­vice only needs to know where it may break a word, which keeps dic­tio­nar­ies off a chip with four hun­dred kilo­bytes of mem­ory.
+
+# Ostatnia strona
+
+Je­śli wi­dzisz ten aka­pit, prze­wi­ja­nie do przo­du dzia­ła. Wróć te­raz kil­ka stron, aby spraw­dzić prze­wi­ja­nie wstecz, a po­tem wyjdź przy­ci­skiem „Wstecz”.
+
+Un­sup­port­ed sym­bols fall back: 😀.

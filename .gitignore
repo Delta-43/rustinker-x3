@@ -1,0 +1,29 @@
+# Rust
+/target
+**/*.rs.bk
+
+# Device dumps and secrets: never commit
+/backups/
+/secrets/
+wifi.json
+.env
+*.pem
+
+# Tool-local settings
+.claude/settings.local.json
+.codex/local*
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Build outputs
+/dist/
+/_site/
+
+# Companion local state and credentials
+/data/
+/config/*.cfg
+!/config/*.example.cfg

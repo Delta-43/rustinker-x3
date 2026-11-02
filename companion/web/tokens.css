@@ -1,0 +1,160 @@
+/* Field Journal tokens (the author's design library, systems/field-journal), copied
+   from the generated tokens.css. Palette steps are dropped; only semantic tokens
+   remain. Literata (OFL) ships with the companion. General Sans (ITF FFL) may
+   not be redistributed, so it loads only from an optional private font folder
+   (X3_FONT_DIR); otherwise the system sans is used. */
+@font-face { font-family: Literata; src: url("/fonts/literata-latin-wght-normal.woff2") format("woff2"); font-weight: 200 900; font-style: normal; unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; font-display: swap; }
+@font-face { font-family: Literata; src: url("/fonts/literata-latin-ext-wght-normal.woff2") format("woff2"); font-weight: 200 900; font-style: normal; unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; font-display: swap; }
+@font-face { font-family: "General Sans"; src: url("/fonts/GeneralSans-Variable.woff2") format("woff2"); font-weight: 200 700; font-style: normal; font-display: swap; }
+
+:root {
+  color-scheme: light dark;
+  --font-display: Literata, Georgia, 'Times New Roman', serif;
+  --font-display-features: "kern", "liga", "onum";
+  --font-body: Literata, Georgia, 'Times New Roman', serif;
+  --font-body-features: "kern", "liga", "onum";
+  --font-ui: "General Sans", system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ui-features: "tnum";
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --text-xs: 0.8125rem;
+  --text-xs-line: 1.45;
+  --text-xs-weight: 500;
+  --text-xs-tracking: 0.01em;
+  --text-sm: 0.9375rem;
+  --text-sm-line: 1.5;
+  --text-sm-weight: 500;
+  --text-sm-tracking: 0;
+  --text-base: 1.125rem;
+  --text-base-line: 1.65;
+  --text-base-weight: 400;
+  --text-base-tracking: 0;
+  --text-lg: 1.3125rem;
+  --text-lg-line: 1.55;
+  --text-lg-weight: 400;
+  --text-lg-tracking: 0;
+  --text-xl: 1.625rem;
+  --text-xl-line: 1.3;
+  --text-xl-weight: 500;
+  --text-xl-tracking: -0.005em;
+  --text-2xl: 2rem;
+  --text-2xl-line: 1.2;
+  --text-2xl-weight: 500;
+  --text-2xl-tracking: -0.01em;
+  --text-3xl: clamp(2.125rem, 1.6rem + 2vw, 2.75rem);
+  --text-3xl-line: 1.15;
+  --text-3xl-weight: 500;
+  --text-3xl-tracking: -0.015em;
+  --text-4xl: clamp(2.5rem, 1.8rem + 3.2vw, 4rem);
+  --text-4xl-line: 1.08;
+  --text-4xl-weight: 400;
+  --text-4xl-tracking: -0.02em;
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow-line: 1.4;
+  --text-eyebrow-weight: 600;
+  --text-eyebrow-tracking: 0.08em;
+  --text-code: 0.9375rem;
+  --text-code-line: 1.6;
+  --text-code-weight: 400;
+  --text-code-tracking: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 104px;
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --border-hairline: 1px;
+  --border-rule: 2px;
+  --shadow-popover: 0 8px 24px oklch(0.2 0.02 85 / 0.12), 0 1px 2px oklch(0.2 0.02 85 / 0.08);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --container: 1200px;
+  --measure: 68ch;
+  --gutter: clamp(16px, 4vw, 32px);
+  --sidebar: 272px;
+}
+
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: oklch(0.955 0.012 85);
+  --color-surface: oklch(0.985 0.006 85);
+  --color-surface-raised: oklch(0.985 0.006 85);
+  --color-surface-feature: oklch(0.93 0.045 82);
+  --color-border: oklch(0.845 0.016 85);
+  --color-text: oklch(0.165 0.004 85);
+  --color-text-muted: oklch(0.47 0.01 85);
+  --color-accent: oklch(0.47 0.095 145);
+  --color-accent-contrast: oklch(0.985 0.006 85);
+  --color-accent-text: oklch(0.39 0.08 145);
+  --color-link: oklch(0.39 0.08 145);
+  --color-focus: oklch(0.47 0.095 145);
+  --color-highlight: oklch(0.8 0.11 78);
+  --color-success: oklch(0.5 0.12 150);
+  --color-warning: oklch(0.6 0.14 65);
+  --color-danger: oklch(0.53 0.17 28);
+  --color-info: oklch(0.5 0.1 245);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: oklch(0.165 0.004 85);
+    --color-surface: oklch(0.2 0.005 85);
+    --color-surface-raised: oklch(0.235 0.005 85);
+    --color-surface-feature: oklch(0.27 0.03 80);
+    --color-border: oklch(0.37 0.008 85);
+    --color-text: oklch(0.93 0.012 85);
+    --color-text-muted: oklch(0.72 0.013 85);
+    --color-accent: oklch(0.72 0.1 145);
+    --color-accent-contrast: oklch(0.165 0.004 85);
+    --color-accent-text: oklch(0.8 0.085 145);
+    --color-link: oklch(0.8 0.085 145);
+    --color-focus: oklch(0.72 0.1 145);
+    --color-highlight: oklch(0.55 0.12 70);
+    --color-success: oklch(0.74 0.13 150);
+    --color-warning: oklch(0.8 0.13 75);
+    --color-danger: oklch(0.72 0.15 28);
+    --color-info: oklch(0.74 0.1 245);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: oklch(0.165 0.004 85);
+  --color-surface: oklch(0.2 0.005 85);
+  --color-surface-raised: oklch(0.235 0.005 85);
+  --color-surface-feature: oklch(0.27 0.03 80);
+  --color-border: oklch(0.37 0.008 85);
+  --color-text: oklch(0.93 0.012 85);
+  --color-text-muted: oklch(0.72 0.013 85);
+  --color-accent: oklch(0.72 0.1 145);
+  --color-accent-contrast: oklch(0.165 0.004 85);
+  --color-accent-text: oklch(0.8 0.085 145);
+  --color-link: oklch(0.8 0.085 145);
+  --color-focus: oklch(0.72 0.1 145);
+  --color-highlight: oklch(0.55 0.12 70);
+  --color-success: oklch(0.74 0.13 150);
+  --color-warning: oklch(0.8 0.13 75);
+  --color-danger: oklch(0.72 0.15 28);
+  --color-info: oklch(0.74 0.1 245);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}

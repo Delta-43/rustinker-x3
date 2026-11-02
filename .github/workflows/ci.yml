@@ -1,0 +1,21 @@
+name: Host and target checks
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned toolchain and target
+        run: rustup show
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+      - run: cargo test --locked --workspace --exclude fw --all-features
+      - run: cargo check --locked -p fw --target riscv32imc-unknown-none-elf
+      - run: cargo build --locked -p fw --release --target riscv32imc-unknown-none-elf
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check

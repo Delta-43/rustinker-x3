@@ -1,0 +1,7 @@
+# Replace x3.example.com with the reviewed Tunnel/Access hostname.
+# Add to the existing Caddy configuration; do not replace other site blocks.
+http://x3.example.com {
+    @device path /device/*
+    respond @device 404
+    reverse_proxy x3-companion:8787
+}

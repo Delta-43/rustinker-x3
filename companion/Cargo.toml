@@ -1,0 +1,36 @@
+[package]
+publish = false
+name = "x3-companion"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+axum = "=0.8.9"
+tokio = { version = "=1.54.1", features = ["full"] }
+rusqlite = { version = "=0.40.2", features = ["bundled", "backup"] }
+jsonwebtoken = { version = "=11.1.0", features = ["rust_crypto"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.154"
+reqwest = { version = "=0.13.5", default-features = false, features = ["rustls", "json"] }
+uuid = { version = "=1.28.0", features = ["v4"] }
+ulid = "=3.0.0"
+getrandom = "=0.4.3"
+base64 = "=0.23.1"
+sha2 = { version = "=0.11.1", default-features = false }
+image.workspace = true
+x3-core.workspace = true
+x3-proto.workspace = true
+x3-tools = { path = "../tools" }
+sim = { path = "../crates/sim" }
+dom_smoothie = "=0.18.2"
+url = "=2.5.8"
+encoding_rs = "=0.8.42"
+hypher = { version = "=0.1.8", default-features = false, features = ["english", "polish"] }
+
+[dev-dependencies]
+tower = { version = "=0.5.3", features = ["util"] }
+http-body-util = "=0.1.5"
+rsa = "=0.9.10"
+embedded-sdmmc = "=0.10.0"

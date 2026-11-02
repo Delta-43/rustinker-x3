@@ -1,0 +1,13 @@
+# The internet route for the X3 (ADR 026). Add to the existing Caddy configuration.
+# Replace device.example.com with the Tunnel hostname that has a Cloudflare Access
+# application with a Service Auth policy (a service token), and no bypass.
+# Only /device/v1/* is passed on, and only to the signed-only listener.
+http://device.example.com {
+    @device path /device/v1/*
+    handle @device {
+        reverse_proxy x3-companion:8789
+    }
+    handle {
+        respond 404
+    }
+}

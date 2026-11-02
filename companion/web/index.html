@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>X3 Reader inbox</title>
+<link rel="preload" href="/fonts/literata-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/app.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+<div class="page">
+<header class="masthead">
+  <h1>Send something to your X3</h1>
+  <p class="lead">Articles, tokens and pictures wait here until you press Receive on the X3.</p>
+  <p class="device"><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M5 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M11 17a1 1 0 1 0 2 0a1 1 0 0 0-2 0"/></g></svg><span id="device">Checking the reader…</span></p>
+</header>
+
+<main class="layout">
+<section class="compose" aria-labelledby="compose-title">
+  <h2 id="compose-title">New item</h2>
+  <fieldset class="switch">
+    <legend class="visually-hidden">What to send</legend>
+    <label><input type="radio" name="mode" value="link" checked><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 15l6-6m-4-3l.463-.536a5 5 0 0 1 7.071 7.072L18 13m-5 5l-.397.534a5.07 5.07 0 0 1-7.127 0a4.97 4.97 0 0 1 0-7.071L6 11"/></svg>Link</label>
+    <label><input type="radio" name="mode" value="paste"><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2M9 9h1m-1 4h6m-6 4h6"/></g></svg>Text</label>
+    <label><input type="radio" name="mode" value="token"><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3.604 7.197l7.138-3.109a.96.96 0 0 1 1.27.527l4.924 11.902a1 1 0 0 1-.514 1.304L9.285 20.93a.96.96 0 0 1-1.271-.527L3.09 8.5a1 1 0 0 1 .514-1.304zM15 4h1a1 1 0 0 1 1 1v3.5M20 6q.396.168.768.315a1 1 0 0 1 .53 1.311L19 13"/></svg>Token</label>
+    <label><input type="radio" name="mode" value="picture"><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 8h.01M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/><path d="m3 16l5-5c.928-.893 2.072-.893 3 0l5 5"/><path d="m14 14l1-1c.928-.893 2.072-.893 3 0l3 3"/></g></svg>Picture</label>
+  </fieldset>
+
+  <form id="link-form" class="panel" data-mode="link">
+    <div class="field">
+      <label for="link-url">Link to the article</label>
+      <input id="link-url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" required maxlength="2048" placeholder="https://">
+      <p class="hint">The companion opens the page and keeps the article. Menus, adverts and comments are left out.</p>
+    </div>
+    <fieldset class="field choice">
+      <legend>Type</legend>
+      <label><input type="radio" name="link-kind" value="article" checked>Article</label>
+      <label><input type="radio" name="link-kind" value="summary">Summary</label>
+    </fieldset>
+    <button class="primary" type="submit">Queue article</button>
+  </form>
+
+  <form id="paste-form" class="panel" data-mode="paste" hidden>
+    <div class="field">
+      <label for="paste-title">Title</label>
+      <input id="paste-title" required maxlength="256" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="paste-url">Source link <span class="optional">optional</span></label>
+      <input id="paste-url" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="2048" placeholder="https://">
+    </div>
+    <div class="field">
+      <label for="paste-text">Text</label>
+      <textarea id="paste-text" required rows="10"></textarea>
+      <p class="hint">A line that starts with “# ” becomes a heading. Leave a blank line between paragraphs.</p>
+    </div>
+    <fieldset class="field choice">
+      <legend>Type</legend>
+      <label><input type="radio" name="paste-kind" value="article" checked>Article</label>
+      <label><input type="radio" name="paste-kind" value="summary">Summary</label>
+    </fieldset>
+    <button class="primary" type="submit">Queue article</button>
+  </form>
+
+  <div id="token-panel" class="panel" data-mode="token" hidden>
+    <section class="saved" data-kind="token" aria-labelledby="saved-token-title" hidden>
+      <h3 id="saved-token-title">Saved tokens</h3>
+    </section>
+    <form id="search-form" class="field">
+      <label for="query">Find a token</label>
+      <div class="row">
+        <input id="query" type="search" required maxlength="200" autocomplete="off" enterkeyhint="search" placeholder="Soldier, Treasure, Zombie…">
+        <button class="secondary" type="submit"><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0-14 0m18 11l-6-6"/></svg>Search</button>
+      </div>
+      <p class="hint">Searches Scryfall’s tokens. The closest names come first.</p>
+    </form>
+    <fieldset id="results" class="results" hidden>
+      <legend>Choose a token</legend>
+      <div id="result-list" class="result-list"></div>
+      <button class="quiet" type="button" id="more-results" hidden>Show more results</button>
+    </fieldset>
+    <p class="hint credit">Card data and images from <a href="https://scryfall.com">Scryfall</a>. Magic: The Gathering cards are © Wizards of the Coast. Not made or endorsed by either.</p>
+    <form id="token-form" hidden>
+      <fieldset class="field choice faces" id="face-field" hidden>
+        <legend>Side</legend>
+      </fieldset>
+      <fieldset class="field choice">
+        <legend>Orientation</legend>
+        <label><input type="radio" name="orientation" value="auto" checked>Auto</label>
+        <label><input type="radio" name="orientation" value="portrait">Portrait</label>
+        <label><input type="radio" name="orientation" value="landscape">Landscape</label>
+      </fieldset>
+      <figure class="screen" id="screen" aria-busy="false">
+        <figcaption id="screen-caption">Preparing the preview…</figcaption>
+      </figure>
+      <label class="check"><input type="checkbox" id="show" checked>Show it on the X3 after Receive</label>
+      <button class="primary" type="submit" id="queue" disabled>Queue token</button>
+    </form>
+  </div>
+
+  <form id="picture-form" class="panel" data-mode="picture" hidden>
+    <section class="saved" data-kind="image" aria-labelledby="saved-image-title" hidden>
+      <h3 id="saved-image-title">Saved pictures</h3>
+    </section>
+    <div class="field">
+      <label for="picture-file">Image</label>
+      <input id="picture-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required>
+      <p class="hint">JPEG, PNG, WebP or GIF. Large photos are made smaller on this device before they are sent.</p>
+    </div>
+    <div class="field">
+      <label for="picture-name">Name <span class="optional">optional</span></label>
+      <input id="picture-name" type="text" maxlength="200" autocomplete="off" placeholder="Harbour at dusk">
+    </div>
+    <fieldset class="field choice">
+      <legend>Fit</legend>
+      <label><input type="radio" name="picture-fit" value="contain" checked>Whole picture</label>
+      <label><input type="radio" name="picture-fit" value="cover">Fill the screen</label>
+    </fieldset>
+    <fieldset class="field choice">
+      <legend>Orientation</legend>
+      <label><input type="radio" name="picture-orientation" value="auto" checked>Auto</label>
+      <label><input type="radio" name="picture-orientation" value="portrait">Portrait</label>
+      <label><input type="radio" name="picture-orientation" value="landscape">Landscape</label>
+    </fieldset>
+    <figure class="screen" id="picture-screen" hidden>
+      <figcaption id="picture-caption">Preparing the preview…</figcaption>
+    </figure>
+    <label class="check"><input type="checkbox" id="picture-show" checked>Show it on the X3 after Receive</label>
+    <button class="primary" type="submit" id="picture-queue" disabled>Queue picture</button>
+  </form>
+
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+</section>
+
+<section class="inbox" aria-labelledby="inbox-title">
+  <div class="inbox-head">
+    <h2 id="inbox-title">Inbox</h2>
+    <button class="quiet" type="button" id="refresh"><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>Refresh</button>
+  </div>
+  <ol id="jobs" class="jobs"></ol>
+  <p id="empty" class="empty" hidden>Nothing here yet. Queue an article, a token or a picture, and it waits here for the X3.</p>
+  <button class="quiet older" type="button" id="older" hidden>Show older</button>
+</section>
+</main>
+
+<footer class="next">
+  <p><span class="eyebrow">Next</span>Press Receive on your X3. Items show “On the reader” once it has them.</p>
+</footer>
+</div>
+
+<dialog id="viewer" class="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-head">
+    <h2 id="viewer-title"></h2>
+    <button class="quiet" type="button" id="viewer-close" aria-label="Close"><svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"/></svg>Close</button>
+  </div>
+  <figure class="screen">
+    <figcaption id="viewer-caption">The X3 shows this screen exactly.</figcaption>
+  </figure>
+  <div class="viewer-nav" id="viewer-nav">
+    <button class="secondary" type="button" id="viewer-prev">Previous</button>
+    <p id="viewer-count" aria-live="polite"></p>
+    <button class="secondary" type="button" id="viewer-next">Next</button>
+  </div>
+</dialog>
+</body>
+</html>

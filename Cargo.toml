@@ -1,0 +1,14 @@
+[workspace]
+members = ["crates/core", "crates/proto", "crates/fw", "crates/sim", "tools", "companion"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+rust-version = "1.99"
+
+[workspace.dependencies]
+x3-core = { path = "crates/core" }
+x3-proto = { path = "crates/proto" }
+image = { version = "=0.25.10", default-features = false, features = ["png", "jpeg"] }

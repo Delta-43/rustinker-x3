@@ -1,0 +1,8 @@
+.git
+target
+backups
+data
+**/*.cfg
+!**/*.example.cfg
+.env
+**/.env

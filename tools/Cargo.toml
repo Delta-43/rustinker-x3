@@ -1,0 +1,14 @@
+[package]
+publish = false
+name = "x3-tools"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+x3-core.workspace = true
+image.workspace = true
+x3-proto.workspace = true
+fontdue = { version = "=0.9.4", default-features = false, features = ["std"] }
+sha2 = { version = "=0.11.1" }

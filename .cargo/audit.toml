@@ -1,0 +1,7 @@
+# cargo audit policy. The reasons are in deny.toml next to the same IDs.
+# Both are in the companion only (jsonwebtoken); the device firmware has none.
+[advisories]
+ignore = [
+    "RUSTSEC-2026-0387",
+    "RUSTSEC-2023-0071",
+]

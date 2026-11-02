@@ -1,0 +1,35 @@
+services:
+  x3-companion:
+    image: x3-companion:local
+    build:
+      context: ../..
+      dockerfile: companion/Dockerfile
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      X3_DATA_DIR: /data
+      X3_PUBLIC_BIND: 0.0.0.0:8787
+      X3_DEVICE_BIND: 0.0.0.0:8788
+      # Signed device listener for the internet route (ADR 026). Reached only by
+      # Caddy over the Docker network; never publish this port on the host.
+      X3_SIGNED_BIND: 0.0.0.0:8789
+      X3_ACCESS_TEAM: ${X3_ACCESS_TEAM:?Set the team.cloudflareaccess.com hostname}
+      X3_ACCESS_AUD: ${X3_ACCESS_AUD:?Set the application audience}
+      X3_QUOTA_BYTES: ${X3_QUOTA_BYTES:-536870912}
+    volumes:
+      - ${X3_DATA_DIR:?Set an absolute private host data directory}:/data
+    ports:
+      - "${LAN_IP:-192.168.1.20}:8788:8788"
+    networks:
+      - caddy
+networks:
+  caddy:
+    external: true
+    name: ${CADDY_NETWORK:?Set the existing Caddy Docker network name}
